@@ -3073,6 +3073,97 @@ body.tallScreen .centerArea,
   right:calc((100vw - var(--lockedAppW,min(100vw,var(--boardMax)))) / 2)!important;
 }
 
+
+/* v86 locked-layout cleanup: fit visible height and remove old responsive drift */
+.app{
+  height:var(--lockedAppH,100dvh)!important;
+  min-height:0!important;
+}
+.gameBoard{
+  width:414px!important;
+  height:896px!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%) scale(var(--lockedBoardScale,1))!important;
+  transform-origin:center center!important;
+  grid-template-rows:minmax(0,1fr) 152px!important;
+  padding:6px!important;
+  gap:5px!important;
+}
+.gameBoard .table{
+  height:auto!important;
+  min-height:0!important;
+}
+.gameBoard .handPanel{
+  height:auto!important;
+  min-height:0!important;
+}
+
+/* Master board positions: these are in the fixed 414x896 layout, then the whole board scales. */
+.centerArea,
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+body.tallScreen:not(.pwaMode) .centerArea,
+body.compactHeight .centerArea{
+  left:50%!important;
+  top:384px!important;
+  width:342px!important;
+  height:430px!important;
+  transform:translate(-50%,-50%)!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:7px!important;
+}
+.topInfo,
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-24px) scale(.93)!important;
+  transform-origin:center top!important;
+  margin-bottom:-20px!important;
+  gap:4px!important;
+}
+.trickRing,
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:0!important;
+}
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:none!important;
+  margin-top:3px!important;
+}
+
+/* Edge seats locked in the master layout. */
+.pos-top{top:2px!important;}
+.pos-bottom{bottom:2px!important;}
+.pos-left,.pos-leftLow,.pos-leftHigh{left:2px!important;}
+.pos-right,.pos-rightLow,.pos-rightHigh{right:2px!important;}
+.pos-leftHigh,.pos-rightHigh,
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:188px!important;
+  transform:translateY(-50%)!important;
+}
+.pos-leftLow,.pos-rightLow,
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:var(--lowerSeatCenterY,560px)!important;
+  transform:translateY(-50%)!important;
+}
+
+/* Trick-card positions are also locked inside the scaled play area. */
+.trick-top{left:50%!important;top:13%!important;}
+.trick-bottom{left:50%!important;top:87%!important;}
+.trick-left,.trick-leftLow,.trick-leftHigh{left:17%!important;}
+.trick-right,.trick-rightLow,.trick-rightHigh{left:83%!important;}
+.trick-left,.trick-right{top:50%!important;}
+.trick-leftHigh,.trick-rightHigh{top:23%!important;}
+.trick-leftLow,.trick-rightLow{top:75%!important;}
+
 </style>
 </head>
 <body>
@@ -3191,7 +3282,7 @@ body.tallScreen .centerArea,
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v85';
+const APP_VERSION='v86';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4662,16 +4753,26 @@ function dumpCard(cards,dumpDanger){return cards.slice().sort((a,b)=>dumpDanger?
 window.updateLockedLayout=function updateLockedLayout(){
   if(!els.app)return;
   const vv=window.visualViewport;
-  const availableW=Math.min(460,Math.max(vv?vv.width:0,window.innerWidth||0,document.documentElement.clientWidth||0));
-  const availableH=Math.max(vv?vv.height:0,window.innerHeight||0,document.documentElement.clientHeight||0);
+  const widthVals=[vv?vv.width:0,window.innerWidth||0,document.documentElement.clientWidth||0].filter(n=>Number.isFinite(n)&&n>0);
+  const heightVals=[vv?vv.height:0,window.innerHeight||0,document.documentElement.clientHeight||0].filter(n=>Number.isFinite(n)&&n>0);
+
+  // For scaling, use the smallest reported height so the board cannot be taller
+  // than the actually visible desktop/browser/PWA area.
+  const rawW=widthVals.length?Math.min(...widthVals):414;
+  const rawH=heightVals.length?Math.min(...heightVals):896;
+
+  const availableW=Math.min(460,rawW);
+  const availableH=rawH;
   const designW=414;
   const designH=896;
-  const margin=4;
-  const scale=Math.max(.72,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
+  const margin=16;
+  const scale=Math.max(.48,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
+
   document.documentElement.style.setProperty('--lockedBoardW',`${designW}px`);
   document.documentElement.style.setProperty('--lockedBoardH',`${designH}px`);
   document.documentElement.style.setProperty('--lockedBoardScale',String(scale));
   document.documentElement.style.setProperty('--lockedAppW',`${Math.min(availableW,designW*scale+margin)}px`);
+  document.documentElement.style.setProperty('--lockedAppH',`${availableH}px`);
 }
 
 function updateLowerAnchors(){
