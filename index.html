@@ -2917,6 +2917,85 @@ body.tallScreen .trumpBox{
   }
 }
 
+
+/* v83 lower side AI cards + slightly smaller play-area info */
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-26px) scale(.92)!important;
+  transform-origin:center top!important;
+  margin-bottom:-22px!important;
+  gap:4px!important;
+}
+body.pwaMode .topInfo .scoreToggleBtn,
+body.tallScreen .topInfo .scoreToggleBtn{
+  min-height:22px!important;
+  padding:2px 10px!important;
+  font-size:.56rem!important;
+}
+body.pwaMode .topInfo .infoChip,
+body.tallScreen .topInfo .infoChip{
+  padding:2px 7px!important;
+  font-size:.58rem!important;
+}
+body.pwaMode .roundInfoLine,
+body.tallScreen .roundInfoLine{
+  gap:4px!important;
+}
+
+/* Keep the lower AI seats below the visual play area instead of riding on top of it. */
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:75%!important;
+}
+
+/* With the chips smaller and higher, the actual card play area can breathe downward. */
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:55%!important;
+  height:min(48dvh,430px)!important;
+}
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:214px!important;
+}
+
+/* Make sure the lower trick cards stay inside the expanded ring and don't collide with side seats. */
+body.pwaMode .trick-leftLow,
+body.pwaMode .trick-rightLow,
+body.tallScreen .trick-leftLow,
+body.tallScreen .trick-rightLow{
+  top:72%!important;
+}
+body.pwaMode .trick-bottom,
+body.tallScreen .trick-bottom{
+  top:86%!important;
+}
+
+@media (max-height:760px){
+  body.pwaMode .topInfo,
+  body.tallScreen .topInfo{
+    transform:translateY(-16px) scale(.94)!important;
+    margin-bottom:-14px!important;
+  }
+  body.pwaMode .pos-leftLow,
+  body.pwaMode .pos-rightLow,
+  body.tallScreen .pos-leftLow,
+  body.tallScreen .pos-rightLow{
+    top:71%!important;
+  }
+  body.pwaMode .centerArea,
+  body.tallScreen .centerArea{
+    top:54%!important;
+    height:min(42dvh,360px)!important;
+  }
+  body.pwaMode .trickRing,
+  body.tallScreen .trickRing{
+    min-height:184px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3035,7 +3114,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v82';
+const APP_VERSION='v83';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
