@@ -2368,6 +2368,58 @@ body.tallScreen:not(.pwaMode) .pos-rightHigh{top:18%!important;}
 body.tallScreen:not(.pwaMode) .pos-leftLow,
 body.tallScreen:not(.pwaMode) .pos-rightLow{top:68%!important;}
 
+
+/* v70 use bottom space instead of expanding upward */
+html,body{
+  min-height:max(100dvh,var(--actualH))!important;
+  height:max(100dvh,var(--actualH))!important;
+}
+.app,.gameBoard{
+  height:max(100dvh,var(--actualH))!important;
+  min-height:max(100dvh,var(--actualH))!important;
+}
+body.pwaMode .gameBoard,
+body.tallScreen .gameBoard{
+  padding-top:calc(8px + var(--safeTop))!important;
+  padding-bottom:calc(8px + var(--safeBottom))!important;
+  gap:9px!important;
+}
+
+/* Keep the score/hand/bid chips clear of the top player cards. */
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:54%!important;
+  width:min(76vw,340px)!important;
+  height:min(36dvh,315px)!important;
+  gap:8px!important;
+}
+
+/* Spread players using the lower screen space, but keep side cards away from trump. */
+body.pwaMode .pos-top,
+body.tallScreen .pos-top{
+  top:14px!important;
+}
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:19%!important;
+}
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:62%!important;
+}
+body.pwaMode .pos-bottom,
+body.tallScreen .pos-bottom{
+  bottom:14px!important;
+}
+body.pwaMode .table::after,
+body.tallScreen .table::after{
+  inset:84px 36px 96px!important;
+}
+
 </style>
 </head>
 <body>
@@ -4114,8 +4166,8 @@ init();
 
   function syncViewportLayout(){
     const vv = window.visualViewport;
-    const w = Math.round(vv ? vv.width : window.innerWidth);
-    const h = Math.round(vv ? vv.height : window.innerHeight);
+    const w = Math.round(Math.max(vv ? vv.width : 0, window.innerWidth || 0, document.documentElement.clientWidth || 0));
+    const h = Math.round(Math.max(vv ? vv.height : 0, window.innerHeight || 0, document.documentElement.clientHeight || 0));
     const root = document.documentElement;
 
     root.style.setProperty('--actualW', w + 'px');
