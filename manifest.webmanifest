@@ -1,0 +1,35 @@
+{
+  "name": "What the Heck",
+  "short_name": "What the Heck",
+  "description": "A trick-taking card game where you bid your tricks and fear the trump.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#4b148c",
+  "theme_color": "#4b148c",
+  "categories": [
+    "games",
+    "card"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
