@@ -2557,6 +2557,27 @@ body.tallScreen .pos-bottom{
   transition:none!important;
 }
 
+
+/* v75 desktop menu click fix + better lower-table spacing */
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:translateY(18px)!important;
+}
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:68%!important;
+}
+body.pwaMode .pos-bottom,
+body.tallScreen .pos-bottom{
+  bottom:10px!important;
+}
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:53.5%!important;
+}
+
 </style>
 </head>
 <body>
@@ -2675,7 +2696,7 @@ body.tallScreen .pos-bottom{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v74';
+const APP_VERSION='v75';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4294,7 +4315,8 @@ function setupDrawerDrag(){
 
   const begin=e=>{
     if(!els.drawer.classList.contains('open'))return;
-    if(e.pointerType==='mouse'&&e.button!==0)return;
+    // Mouse dragging was interfering with desktop menu clicks. Keep drag for touch/pen only.
+    if(e.pointerType==='mouse')return;
     dragging=true;
     startX=e.clientX;
     dragX=0;
