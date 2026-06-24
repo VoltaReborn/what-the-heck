@@ -2904,6 +2904,19 @@ body.tallScreen .trick-rightLow{
   }
 }
 
+
+/* v82 move trump up to avoid overlapping the You player card */
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:translateY(4px)!important;
+}
+@media (max-height:760px){
+  body.pwaMode .trumpBox,
+  body.tallScreen .trumpBox{
+    transform:translateY(0px)!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3022,7 +3035,7 @@ body.tallScreen .trick-rightLow{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v81';
+const APP_VERSION='v82';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
