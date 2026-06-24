@@ -3164,6 +3164,151 @@ body.tallScreen .pos-rightLow{
 .trick-leftHigh,.trick-rightHigh{top:23%!important;}
 .trick-leftLow,.trick-rightLow{top:75%!important;}
 
+
+/* v87 true fixed-board anchors: top-origin scale, no top/bottom clipping */
+html,body{
+  overflow:hidden!important;
+}
+.app{
+  width:var(--lockedAppW,min(100vw,414px))!important;
+  max-width:var(--lockedAppW,min(100vw,414px))!important;
+  height:var(--lockedAppH,100dvh)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+.gameBoard{
+  width:414px!important;
+  height:896px!important;
+  min-height:0!important;
+  position:absolute!important;
+  left:50%!important;
+  top:0!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:translateX(-50%) scale(var(--lockedBoardScale,1))!important;
+  transform-origin:top center!important;
+  display:block!important;
+  padding:0!important;
+  gap:0!important;
+}
+
+/* The table and hand are fixed siblings on the master board. */
+.gameBoard .table{
+  position:absolute!important;
+  left:2px!important;
+  top:2px!important;
+  width:410px!important;
+  height:742px!important;
+  min-height:0!important;
+}
+.gameBoard .handPanel{
+  position:absolute!important;
+  left:2px!important;
+  top:746px!important;
+  width:410px!important;
+  height:148px!important;
+  min-height:0!important;
+}
+
+/* Edge seats are pinned in the fixed table. */
+.pos-top{
+  left:50%!important;
+  top:2px!important;
+  transform:translateX(-50%)!important;
+}
+.pos-bottom{
+  left:50%!important;
+  bottom:2px!important;
+  transform:translateX(-50%)!important;
+}
+.pos-left,
+.pos-leftHigh,
+.pos-leftLow{
+  left:2px!important;
+}
+.pos-right,
+.pos-rightHigh,
+.pos-rightLow{
+  right:2px!important;
+}
+.pos-leftHigh,
+.pos-rightHigh,
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:188px!important;
+  transform:translateY(-50%)!important;
+}
+.pos-leftLow,
+.pos-rightLow,
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:var(--lowerSeatCenterY,566px)!important;
+  transform:translateY(-50%)!important;
+}
+
+/* Fixed center stack: info + play area + trump. Bottom of trump sits just above You. */
+.centerArea,
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+body.tallScreen:not(.pwaMode) .centerArea,
+body.compactHeight .centerArea{
+  position:absolute!important;
+  left:50%!important;
+  top:126px!important;
+  width:342px!important;
+  height:552px!important;
+  transform:translateX(-50%)!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:7px!important;
+  pointer-events:none!important;
+}
+.topInfo,
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-22px) scale(.93)!important;
+  transform-origin:center top!important;
+  margin-bottom:-20px!important;
+  gap:4px!important;
+}
+.trickRing,
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:0!important;
+}
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:none!important;
+  margin-top:3px!important;
+}
+
+/* Fixed trick-card positions inside the play area. */
+.trick-top{left:50%!important;top:13%!important;}
+.trick-bottom{left:50%!important;top:87%!important;}
+.trick-left,.trick-leftLow,.trick-leftHigh{left:17%!important;}
+.trick-right,.trick-rightLow,.trick-rightHigh{left:83%!important;}
+.trick-left,.trick-right{top:50%!important;}
+.trick-leftHigh,.trick-rightHigh{top:23%!important;}
+.trick-leftLow,.trick-rightLow{top:75%!important;}
+
+/* The oval guide follows the locked table, not old responsive insets. */
+.table::after,
+body.pwaMode .table::after,
+body.tallScreen .table::after{
+  inset:36px 34px 98px!important;
+}
+
+/* Drawer follows the scaled app, not the old max-width formula. */
+.drawer{
+  right:calc((100vw - var(--lockedAppW,min(100vw,414px))) / 2)!important;
+}
+
 </style>
 </head>
 <body>
@@ -3282,7 +3427,7 @@ body.tallScreen .pos-rightLow{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v86';
+const APP_VERSION='v87';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4755,23 +4900,20 @@ window.updateLockedLayout=function updateLockedLayout(){
   const vv=window.visualViewport;
   const widthVals=[vv?vv.width:0,window.innerWidth||0,document.documentElement.clientWidth||0].filter(n=>Number.isFinite(n)&&n>0);
   const heightVals=[vv?vv.height:0,window.innerHeight||0,document.documentElement.clientHeight||0].filter(n=>Number.isFinite(n)&&n>0);
-
-  // For scaling, use the smallest reported height so the board cannot be taller
-  // than the actually visible desktop/browser/PWA area.
   const rawW=widthVals.length?Math.min(...widthVals):414;
   const rawH=heightVals.length?Math.min(...heightVals):896;
 
-  const availableW=Math.min(460,rawW);
-  const availableH=rawH;
   const designW=414;
   const designH=896;
-  const margin=16;
-  const scale=Math.max(.48,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
+  const availableW=Math.min(460,rawW);
+  const availableH=rawH;
+  const margin=4;
+  const scale=Math.max(.45,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
 
   document.documentElement.style.setProperty('--lockedBoardW',`${designW}px`);
   document.documentElement.style.setProperty('--lockedBoardH',`${designH}px`);
   document.documentElement.style.setProperty('--lockedBoardScale',String(scale));
-  document.documentElement.style.setProperty('--lockedAppW',`${Math.min(availableW,designW*scale+margin)}px`);
+  document.documentElement.style.setProperty('--lockedAppW',`${Math.min(availableW,designW*scale)}px`);
   document.documentElement.style.setProperty('--lockedAppH',`${availableH}px`);
 }
 
