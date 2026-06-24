@@ -2697,6 +2697,127 @@ body.tallScreen .trumpBox{
   100%{border-color:rgba(71,226,126,.72);box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
 }
 
+
+/* v78 slower trump status animation */
+.trumpPanel.flash-locked{
+  animation:trumpLockBorder 1250ms cubic-bezier(.18,.78,.22,1) both!important;
+}
+.trumpPanel.flash-broken{
+  animation:trumpBreakBorder 1250ms cubic-bezier(.18,.78,.22,1) both!important;
+}
+.trumpStatus.flash{
+  animation:trumpStatusPop 1800ms cubic-bezier(.18,.78,.22,1) both!important;
+}
+
+
+/* v79 rebalance play area: chips up, trump/bottom seats down, trick area larger */
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:54%!important;
+  width:min(78vw,352px)!important;
+  height:min(43dvh,382px)!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:7px!important;
+}
+
+/* Pull the score/hand/bid chips upward inside the center area. */
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-18px)!important;
+  margin-bottom:-12px!important;
+  position:relative!important;
+  z-index:5!important;
+}
+
+/* Let the trick ring use the newly-created vertical room. */
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:178px!important;
+}
+
+/* Push trump down toward the You card. */
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:translateY(46px)!important;
+  position:relative!important;
+  z-index:4!important;
+}
+
+/* Push the lower AI seats down, but keep them above the trump panel. */
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:71%!important;
+}
+
+/* Keep the human seat low so the lowered trump has somewhere to sit above it. */
+body.pwaMode .pos-bottom,
+body.tallScreen .pos-bottom{
+  bottom:10px!important;
+}
+
+/* Slightly spread trick card locations inside the bigger trick area. */
+body.pwaMode .trick-top,
+body.tallScreen .trick-top{
+  top:17%!important;
+}
+body.pwaMode .trick-bottom,
+body.tallScreen .trick-bottom{
+  top:83%!important;
+}
+body.pwaMode .trick-left,
+body.pwaMode .trick-leftLow,
+body.pwaMode .trick-leftHigh,
+body.tallScreen .trick-left,
+body.tallScreen .trick-leftLow,
+body.tallScreen .trick-leftHigh{
+  left:18%!important;
+}
+body.pwaMode .trick-right,
+body.pwaMode .trick-rightLow,
+body.pwaMode .trick-rightHigh,
+body.tallScreen .trick-right,
+body.tallScreen .trick-rightLow,
+body.tallScreen .trick-rightHigh{
+  left:82%!important;
+}
+body.pwaMode .trick-leftHigh,
+body.pwaMode .trick-rightHigh,
+body.tallScreen .trick-leftHigh,
+body.tallScreen .trick-rightHigh{
+  top:28%!important;
+}
+body.pwaMode .trick-leftLow,
+body.pwaMode .trick-rightLow,
+body.tallScreen .trick-leftLow,
+body.tallScreen .trick-rightLow{
+  top:72%!important;
+}
+
+@media (max-height:760px){
+  body.pwaMode .centerArea,
+  body.tallScreen .centerArea{
+    top:53%!important;
+    height:min(39dvh,330px)!important;
+  }
+  body.pwaMode .topInfo,
+  body.tallScreen .topInfo{
+    transform:translateY(-10px)!important;
+    margin-bottom:-7px!important;
+  }
+  body.pwaMode .trumpBox,
+  body.tallScreen .trumpBox{
+    transform:translateY(34px)!important;
+  }
+  body.pwaMode .pos-leftLow,
+  body.pwaMode .pos-rightLow,
+  body.tallScreen .pos-leftLow,
+  body.tallScreen .pos-rightLow{
+    top:68%!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2815,7 +2936,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v77';
+const APP_VERSION='v79';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -3210,7 +3331,23 @@ function submitHumanBid(bid){
 }
 function setBid(playerIndex,bid,fromFlow=false){
   const p=game.players[playerIndex];p.bid=bid;bidFlashIndex=playerIndex;log(`${p.name} bids ${bid}`,`${p.name} predicts ${bid} trick${bid===1?'':'s'}.`);
-  if(playerIndex===game.dealerIndex){game.phase='playing';game.turnIndex=game.leaderIndex;game.trumpLockedRevealed=true;triggerTrumpStatusFlash('locked');explain(`Bidding is complete. ${playerLeadPhrase(game.leaderIndex,'the first trick')}.`);render();saveGame();setTimeout(()=>{if(bidFlashIndex===playerIndex){bidFlashIndex=null;renderSeats();}},650);continuePlay();return;}
+  if(playerIndex===game.dealerIndex){
+    game.phase='trumpLocking';
+    game.turnIndex=game.leaderIndex;
+    game.trumpLockedRevealed=true;
+    explain(`Bidding is complete. ${playerLeadPhrase(game.leaderIndex,'the first trick')}.`);
+    render();
+    saveGame();
+    setTimeout(()=>{if(bidFlashIndex===playerIndex){bidFlashIndex=null;renderSeats();}},650);
+    triggerTrumpStatusFlash('locked').then(()=>{
+      if(!game||game.phase!=='trumpLocking')return;
+      game.phase='playing';
+      render();
+      saveGame();
+      continuePlay();
+    });
+    return;
+  }
   game.bidTurnIndex=clockwiseNext(playerIndex);render();saveGame();setTimeout(()=>{if(bidFlashIndex===playerIndex){bidFlashIndex=null;renderSeats();}},650);continueBidding();
 }
 function showBidBubble(playerIndex,text,type){
@@ -4298,12 +4435,16 @@ function triggerTrumpStatusFlash(status){
   trumpFlashStatus=status;
   clearTimeout(trumpFlashTimer);
   renderTrump();
-  trumpFlashTimer=setTimeout(()=>{
-    if(trumpFlashStatus===status){
-      trumpFlashStatus=null;
-      renderTrump();
-    }
-  },1350*animationScale());
+  const duration=1900*animationScale();
+  return new Promise(resolve=>{
+    trumpFlashTimer=setTimeout(()=>{
+      if(trumpFlashStatus===status){
+        trumpFlashStatus=null;
+        renderTrump();
+      }
+      resolve();
+    },duration);
+  });
 }
 function renderTrump(){
   if(!game||!game.trumpCard){els.trumpBox.innerHTML='';return;}
@@ -4495,7 +4636,7 @@ function bindEvents(){
   setupDrawerDrag();
   window.addEventListener('resize',()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateTurnRacerOverlay();});
   window.addEventListener('orientationchange',()=>setTimeout(()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateTurnRacerOverlay();},120));
-  els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){render();exitSplash();if(game.phase==='bidding')continueBidding();else if(game.phase==='playing')continuePlay();else if(game.phase==='handOver')showRecap(false);else if(game.phase==='gameOver')showRecap(true);}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
+  els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){render();exitSplash();if(game.phase==='bidding')continueBidding();else if(game.phase==='playing'||game.phase==='trumpLocking'){if(game.phase==='trumpLocking')game.phase='playing';continuePlay();}else if(game.phase==='handOver')showRecap(false);else if(game.phase==='gameOver')showRecap(true);}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
   els.closeSetup.onclick=()=>closeModal(els.setupModal);els.cancelSetup.onclick=()=>closeModal(els.setupModal);els.confirmSetup.onclick=startNewGameFromSetup;els.setupTiebreaker.onclick=()=>els.setupTiebreaker.classList.toggle('on');
   els.closeConfirm.onclick=()=>{pendingConfirm=null;closeModal(els.confirmModal);};els.cancelConfirm.onclick=els.closeConfirm.onclick;els.confirmPlayBtn.onclick=()=>{if(pendingConfirm)playHumanCard(pendingConfirm);};
   els.scoreModal.onclick=()=>closeModal(els.scoreModal);if(els.trumpModal)els.trumpModal.onclick=()=>closeModal(els.trumpModal);
