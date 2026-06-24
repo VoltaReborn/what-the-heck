@@ -2254,6 +2254,77 @@ html,body{
   .table::after{ inset:78px 38px 84px!important; }
 }
 
+
+/* v67 actual viewport / PWA-aware responsive layout */
+:root{
+  --actualH:100dvh;
+  --actualW:100vw;
+}
+html,body{
+  min-height:var(--actualH)!important;
+  height:var(--actualH)!important;
+  background:var(--felt)!important;
+}
+.app{
+  top:0!important;
+  bottom:auto!important;
+  margin:0 auto!important;
+  height:var(--actualH)!important;
+  min-height:var(--actualH)!important;
+}
+.gameBoard{
+  height:var(--actualH)!important;
+  min-height:0!important;
+}
+
+/* Give the table more usable height instead of letting unused space sit below the app. */
+body.tallScreen .gameBoard{
+  grid-template-rows:minmax(0,1fr) auto!important;
+  gap:9px!important;
+  padding-top:calc(10px + var(--safeTop))!important;
+  padding-bottom:calc(10px + var(--safeBottom))!important;
+}
+body.veryTallScreen .gameBoard{
+  gap:11px!important;
+  padding-top:calc(14px + var(--safeTop))!important;
+  padding-bottom:calc(14px + var(--safeBottom))!important;
+}
+
+/* Installed/PWA mode has more vertical room than Safari; use it more aggressively. */
+body.pwaMode .centerArea{
+  width:min(76vw,344px)!important;
+  height:min(52dvh,430px)!important;
+  gap:11px!important;
+}
+body.pwaMode .pos-top{top:14px!important;}
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh{top:15%!important;}
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow{top:80%!important;}
+body.pwaMode .pos-bottom{bottom:14px!important;}
+body.pwaMode .table::after{inset:82px 34px 92px!important;}
+
+/* Safari/non-installed fallback still spreads when real screen height allows it. */
+body.tallScreen:not(.pwaMode) .centerArea{
+  width:min(76vw,340px)!important;
+  height:min(49dvh,380px)!important;
+}
+body.tallScreen:not(.pwaMode) .pos-leftHigh,
+body.tallScreen:not(.pwaMode) .pos-rightHigh{top:17%!important;}
+body.tallScreen:not(.pwaMode) .pos-leftLow,
+body.tallScreen:not(.pwaMode) .pos-rightLow{top:76%!important;}
+body.tallScreen:not(.pwaMode) .pos-bottom{bottom:12px!important;}
+body.tallScreen:not(.pwaMode) .table::after{inset:72px 36px 80px!important;}
+
+/* On cramped screens, keep the old tighter layout. */
+body.compactHeight .centerArea{
+  height:min(43dvh,280px)!important;
+}
+body.compactHeight .pos-leftHigh,
+body.compactHeight .pos-rightHigh{top:24%!important;}
+body.compactHeight .pos-leftLow,
+body.compactHeight .pos-rightLow{top:58%!important;}
+
 </style>
 </head>
 <body>
@@ -3984,6 +4055,40 @@ function bindEvents(){
 
 function init(){bindEvents();applyAppearance();showSplash();render();}
 init();
+})();
+</script>
+
+
+<script>
+(function(){
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true ||
+           document.referrer.startsWith('android-app://');
+  }
+
+  function syncViewportLayout(){
+    const vv = window.visualViewport;
+    const w = Math.round(vv ? vv.width : window.innerWidth);
+    const h = Math.round(vv ? vv.height : window.innerHeight);
+    const root = document.documentElement;
+
+    root.style.setProperty('--actualW', w + 'px');
+    root.style.setProperty('--actualH', h + 'px');
+
+    document.body.classList.toggle('pwaMode', isStandalone());
+    document.body.classList.toggle('tallScreen', h >= 760);
+    document.body.classList.toggle('veryTallScreen', h >= 850);
+    document.body.classList.toggle('compactHeight', h < 720);
+  }
+
+  syncViewportLayout();
+  window.addEventListener('resize', syncViewportLayout, {passive:true});
+  window.addEventListener('orientationchange', () => setTimeout(syncViewportLayout, 80), {passive:true});
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', syncViewportLayout, {passive:true});
+    window.visualViewport.addEventListener('scroll', syncViewportLayout, {passive:true});
+  }
 })();
 </script>
 
