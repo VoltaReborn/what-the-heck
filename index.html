@@ -3023,6 +3023,56 @@ body.tallScreen .centerArea,
   grid-template-rows:auto minmax(0,1fr) auto!important;
 }
 
+
+/* v85 locked virtual board layout: one fixed design scales as a unit */
+.app{
+  width:var(--lockedAppW,min(100vw,var(--boardMax)))!important;
+  max-width:var(--lockedAppW,min(100vw,var(--boardMax)))!important;
+  height:100dvh!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+.gameBoard{
+  width:var(--lockedBoardW,414px)!important;
+  height:var(--lockedBoardH,896px)!important;
+  min-height:0!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%) scale(var(--lockedBoardScale,1))!important;
+  transform-origin:center center!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) 152px!important;
+  gap:5px!important;
+  padding:calc(6px + var(--safeTop)) 6px calc(6px + var(--safeBottom))!important;
+}
+.gameBoard .handPanel{
+  height:auto!important;
+}
+.gameBoard .table{
+  min-height:0!important;
+}
+.splash{
+  width:var(--lockedAppW,min(100vw,var(--boardMax)))!important;
+  max-width:var(--lockedAppW,min(100vw,var(--boardMax)))!important;
+  margin:0 auto!important;
+}
+
+/* Keep edge pieces locked inside the scaled board instead of independently responding. */
+.pos-left,
+.pos-leftLow,
+.pos-leftHigh{left:2px!important;}
+.pos-right,
+.pos-rightLow,
+.pos-rightHigh{right:2px!important;}
+.pos-top{top:2px!important;}
+.pos-bottom{bottom:2px!important;}
+.drawer{
+  right:calc((100vw - var(--lockedAppW,min(100vw,var(--boardMax)))) / 2)!important;
+}
+
 </style>
 </head>
 <body>
@@ -3141,7 +3191,7 @@ body.tallScreen .centerArea,
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v84';
+const APP_VERSION='v85';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4608,6 +4658,22 @@ function lowestWinner(cards){return cards.slice().sort((a,b)=>playPower(a)-playP
 function dumpCard(cards,dumpDanger){return cards.slice().sort((a,b)=>dumpDanger?playPower(b)-playPower(a):playPower(a)-playPower(b))[0];}
 
 
+
+window.updateLockedLayout=function updateLockedLayout(){
+  if(!els.app)return;
+  const vv=window.visualViewport;
+  const availableW=Math.min(460,Math.max(vv?vv.width:0,window.innerWidth||0,document.documentElement.clientWidth||0));
+  const availableH=Math.max(vv?vv.height:0,window.innerHeight||0,document.documentElement.clientHeight||0);
+  const designW=414;
+  const designH=896;
+  const margin=4;
+  const scale=Math.max(.72,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
+  document.documentElement.style.setProperty('--lockedBoardW',`${designW}px`);
+  document.documentElement.style.setProperty('--lockedBoardH',`${designH}px`);
+  document.documentElement.style.setProperty('--lockedBoardScale',String(scale));
+  document.documentElement.style.setProperty('--lockedAppW',`${Math.min(availableW,designW*scale+margin)}px`);
+}
+
 function updateLowerAnchors(){
   if(!els.table||!els.trickRing)return;
   const tableRect=els.table.getBoundingClientRect();
@@ -4869,8 +4935,9 @@ function setupDrawerDrag(){
 
 function bindEvents(){
   setupDrawerDrag();
-  window.addEventListener('resize',()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();});
-  window.addEventListener('orientationchange',()=>setTimeout(()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();},120));
+  updateLockedLayout();
+  window.addEventListener('resize',()=>{updateLockedLayout();if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();});
+  window.addEventListener('orientationchange',()=>setTimeout(()=>{updateLockedLayout();if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();},120));
   els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){render();exitSplash();if(game.phase==='bidding')continueBidding();else if(game.phase==='playing'||game.phase==='trumpLocking'){if(game.phase==='trumpLocking')game.phase='playing';continuePlay();}else if(game.phase==='handOver')showRecap(false);else if(game.phase==='gameOver')showRecap(true);}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
   els.closeSetup.onclick=()=>closeModal(els.setupModal);els.cancelSetup.onclick=()=>closeModal(els.setupModal);els.confirmSetup.onclick=startNewGameFromSetup;els.setupTiebreaker.onclick=()=>els.setupTiebreaker.classList.toggle('on');
   els.closeConfirm.onclick=()=>{pendingConfirm=null;closeModal(els.confirmModal);};els.cancelConfirm.onclick=els.closeConfirm.onclick;els.confirmPlayBtn.onclick=()=>{if(pendingConfirm)playHumanCard(pendingConfirm);};
@@ -4907,6 +4974,7 @@ init();
     document.body.classList.toggle('tallScreen', h >= 760);
     document.body.classList.toggle('veryTallScreen', h >= 850);
     document.body.classList.toggle('compactHeight', h < 720);
+    if(window.updateLockedLayout)window.updateLockedLayout();
   }
 
   syncViewportLayout();
