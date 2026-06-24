@@ -2420,6 +2420,87 @@ body.tallScreen .table::after{
   inset:84px 36px 96px!important;
 }
 
+
+/* v71 root shell fix: app/splash fill the full installed-PWA screen */
+:root{
+  --fullAppH:100vh;
+}
+@supports (height:100dvh){
+  :root{--fullAppH:100dvh;}
+}
+@supports (height:100lvh){
+  :root{--fullAppH:100lvh;}
+}
+html{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  overflow:hidden!important;
+  background:var(--felt)!important;
+}
+body{
+  position:fixed!important;
+  inset:0!important;
+  width:100%!important;
+  height:var(--fullAppH)!important;
+  min-height:var(--fullAppH)!important;
+  overflow:hidden!important;
+  background:var(--felt)!important;
+}
+.app{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:0!important;
+  width:min(100vw,var(--boardMax))!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+.splash{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:0!important;
+  width:min(100vw,var(--boardMax))!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+.gameBoard{
+  position:absolute!important;
+  inset:0!important;
+  height:auto!important;
+  min-height:0!important;
+}
+
+/* Now that the shell fills the screen, use the extra room by pushing content down modestly. */
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:55%!important;
+  height:min(35dvh,310px)!important;
+}
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:19%!important;
+}
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:62%!important;
+}
+body.pwaMode .pos-bottom,
+body.tallScreen .pos-bottom{
+  bottom:16px!important;
+}
+
 </style>
 </head>
 <body>
@@ -4168,10 +4249,6 @@ init();
     const vv = window.visualViewport;
     const w = Math.round(Math.max(vv ? vv.width : 0, window.innerWidth || 0, document.documentElement.clientWidth || 0));
     const h = Math.round(Math.max(vv ? vv.height : 0, window.innerHeight || 0, document.documentElement.clientHeight || 0));
-    const root = document.documentElement;
-
-    root.style.setProperty('--actualW', w + 'px');
-    root.style.setProperty('--actualH', h + 'px');
 
     document.body.classList.toggle('pwaMode', isStandalone());
     document.body.classList.toggle('tallScreen', h >= 760);
