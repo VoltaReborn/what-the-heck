@@ -3440,6 +3440,101 @@ body.tallScreen .table::after{
   right:calc((100vw - var(--lockedAppW,min(100vw,414px))) / 2)!important;
 }
 
+
+/* v89 phone-master cleanup: smaller play area + drawer fully hidden when closed */
+
+/* Closed drawer body goes fully offscreen; only the tab should show. */
+.drawer{
+  right:0!important;
+  transform:translateX(100%)!important;
+}
+.drawer.open{
+  transform:translateX(0)!important;
+}
+.drawerTab{
+  left:-26px!important;
+}
+
+/* Keep the locked-board fit, but make the phone master layout the priority. */
+.gameBoard .table{
+  top:2px!important;
+  height:736px!important;
+}
+.gameBoard .handPanel{
+  top:742px!important;
+  height:152px!important;
+}
+
+/* Smaller center stack. This reduces the oversized empty play area. */
+.centerArea,
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+body.tallScreen:not(.pwaMode) .centerArea,
+body.compactHeight .centerArea{
+  top:172px!important;
+  width:330px!important;
+  height:356px!important;
+  gap:6px!important;
+}
+
+/* Move and compact the play-area info so it doesn't force a huge ring. */
+.topInfo,
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-14px) scale(.90)!important;
+  transform-origin:center top!important;
+  margin-bottom:-14px!important;
+  gap:4px!important;
+}
+
+/* Smaller ring, with cards spread inside it. */
+.trickRing,
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:0!important;
+}
+.trick-top{left:50%!important;top:15%!important;}
+.trick-bottom{left:50%!important;top:85%!important;}
+.trick-left,.trick-leftLow,.trick-leftHigh{left:16%!important;}
+.trick-right,.trick-rightLow,.trick-rightHigh{left:84%!important;}
+.trick-left,.trick-right{top:50%!important;}
+.trick-leftHigh,.trick-rightHigh{top:24%!important;}
+.trick-leftLow,.trick-rightLow{top:76%!important;}
+
+/* Re-anchor side seats from the smaller play area. */
+.pos-leftHigh,.pos-rightHigh,
+body.pwaMode .pos-leftHigh,body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,body.tallScreen .pos-rightHigh{
+  top:var(--upperSeatCenterY,170px)!important;
+  transform:translateY(-50%)!important;
+}
+.pos-leftLow,.pos-rightLow,
+body.pwaMode .pos-leftLow,body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,body.tallScreen .pos-rightLow{
+  top:var(--lowerSeatCenterY,500px)!important;
+  transform:translateY(-50%)!important;
+}
+
+/* Keep top seat below the safe-area-started board with a small visible margin. */
+.pos-top{
+  top:12px!important;
+}
+
+/* The guide oval should match the smaller play area better. */
+.table::after,
+body.pwaMode .table::after,
+body.tallScreen .table::after{
+  inset:66px 36px 116px!important;
+}
+
+/* Trump remains directly under the smaller play area. */
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  margin-top:3px!important;
+  transform:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -3558,7 +3653,7 @@ body.tallScreen .table::after{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v88';
+const APP_VERSION='v89';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
