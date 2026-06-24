@@ -2206,6 +2206,54 @@ body.recapModalOpen .drawerTab{
   place-items:center!important;
 }
 
+
+/* v66 responsive tall-phone layout */
+html,body{
+  min-height:100vh!important;
+  min-height:100dvh!important;
+}
+.app{
+  height:100vh!important;
+  min-height:100dvh!important;
+}
+.gameBoard{
+  height:100%!important;
+}
+@media (min-height:760px){
+  .gameBoard{
+    padding-top:calc(10px + var(--safeTop))!important;
+    padding-bottom:calc(10px + var(--safeBottom))!important;
+    gap:8px!important;
+  }
+  .centerArea{
+    top:50%!important;
+    width:min(76vw,340px)!important;
+    height:min(48dvh,360px)!important;
+    gap:10px!important;
+  }
+  .pos-top{ top:12px!important; }
+  .pos-leftHigh,.pos-rightHigh{ top:18%!important; }
+  .pos-leftLow,.pos-rightLow{ top:74%!important; }
+  .pos-bottom{ bottom:12px!important; }
+  .table::after{ inset:70px 38px 76px!important; }
+}
+@media (min-height:850px){
+  .gameBoard{
+    padding-top:calc(14px + var(--safeTop))!important;
+    padding-bottom:calc(14px + var(--safeBottom))!important;
+    gap:10px!important;
+  }
+  .centerArea{
+    top:50%!important;
+    height:min(51dvh,410px)!important;
+  }
+  .pos-top{ top:14px!important; }
+  .pos-leftHigh,.pos-rightHigh{ top:16%!important; }
+  .pos-leftLow,.pos-rightLow{ top:77%!important; }
+  .pos-bottom{ bottom:14px!important; }
+  .table::after{ inset:78px 38px 84px!important; }
+}
+
 </style>
 </head>
 <body>
