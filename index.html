@@ -3309,6 +3309,137 @@ body.tallScreen .table::after{
   right:calc((100vw - var(--lockedAppW,min(100vw,414px))) / 2)!important;
 }
 
+
+/* v88 corrected locked layout: real scaler + smaller play area + safe-top anchoring */
+html,body{
+  overflow:hidden!important;
+}
+.app{
+  width:var(--lockedAppW,min(100vw,414px))!important;
+  max-width:var(--lockedAppW,min(100vw,414px))!important;
+  height:var(--lockedAppH,100dvh)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+.gameBoard{
+  width:414px!important;
+  height:896px!important;
+  min-height:0!important;
+  position:absolute!important;
+  left:50%!important;
+  top:var(--lockedBoardTop,0px)!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:translateX(-50%) scale(var(--lockedBoardScale,1))!important;
+  transform-origin:top center!important;
+  display:block!important;
+  padding:0!important;
+  gap:0!important;
+}
+
+/* Fixed master-layout table and hand. The hand is always visible because the whole board scales. */
+.gameBoard .table{
+  position:absolute!important;
+  left:2px!important;
+  top:2px!important;
+  width:410px!important;
+  height:738px!important;
+  min-height:0!important;
+}
+.gameBoard .handPanel{
+  position:absolute!important;
+  left:2px!important;
+  top:742px!important;
+  width:410px!important;
+  height:152px!important;
+  min-height:0!important;
+}
+
+/* Top card clears the safe area because the whole board starts below --lockedBoardTop. */
+.pos-top{
+  left:50%!important;
+  top:2px!important;
+  transform:translateX(-50%)!important;
+}
+.pos-bottom{
+  left:50%!important;
+  bottom:2px!important;
+  transform:translateX(-50%)!important;
+}
+.pos-left,.pos-leftHigh,.pos-leftLow{left:2px!important;}
+.pos-right,.pos-rightHigh,.pos-rightLow{right:2px!important;}
+
+/* Side AI seats are anchored from the actual play-area top/bottom in master pixels. */
+.pos-leftHigh,.pos-rightHigh,
+body.pwaMode .pos-leftHigh,body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,body.tallScreen .pos-rightHigh{
+  top:var(--upperSeatCenterY,158px)!important;
+  transform:translateY(-50%)!important;
+}
+.pos-leftLow,.pos-rightLow,
+body.pwaMode .pos-leftLow,body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,body.tallScreen .pos-rightLow{
+  top:var(--lowerSeatCenterY,574px)!important;
+  transform:translateY(-50%)!important;
+}
+
+/* Smaller play stack. */
+.centerArea,
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+body.tallScreen:not(.pwaMode) .centerArea,
+body.compactHeight .centerArea{
+  position:absolute!important;
+  left:50%!important;
+  top:154px!important;
+  width:330px!important;
+  height:440px!important;
+  transform:translateX(-50%)!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:7px!important;
+  pointer-events:none!important;
+}
+.topInfo,
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-16px) scale(.90)!important;
+  transform-origin:center top!important;
+  margin-bottom:-16px!important;
+  gap:4px!important;
+}
+.trickRing,
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:0!important;
+}
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:none!important;
+  margin-top:3px!important;
+}
+
+/* Trick-card anchors inside the smaller play area. */
+.trick-top{left:50%!important;top:14%!important;}
+.trick-bottom{left:50%!important;top:86%!important;}
+.trick-left,.trick-leftLow,.trick-leftHigh{left:17%!important;}
+.trick-right,.trick-rightLow,.trick-rightHigh{left:83%!important;}
+.trick-left,.trick-right{top:50%!important;}
+.trick-leftHigh,.trick-rightHigh{top:24%!important;}
+.trick-leftLow,.trick-rightLow{top:74%!important;}
+
+.table::after,
+body.pwaMode .table::after,
+body.tallScreen .table::after{
+  inset:42px 34px 102px!important;
+}
+
+.drawer{
+  right:calc((100vw - var(--lockedAppW,min(100vw,414px))) / 2)!important;
+}
+
 </style>
 </head>
 <body>
@@ -3427,7 +3558,7 @@ body.tallScreen .table::after{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v87';
+const APP_VERSION='v88';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -3459,6 +3590,7 @@ let cardMotionCardId=null;
 let turnRacerEl=null;
 
 const els={
+  app:document.getElementById('app'),centerArea:document.querySelector('.centerArea'),
   table:document.getElementById('table'),topInfo:document.getElementById('topInfo'),trickRing:document.getElementById('trickRing'),trumpBox:document.getElementById('trumpBox'),handGrid:document.getElementById('handGrid'),handMeta:document.getElementById('handMeta'),
   splash:document.getElementById('splash'),startBtn:document.getElementById('startBtn'),continueBtn:document.getElementById('continueBtn'),splashRulesBtn:document.getElementById('splashRulesBtn'),
   setupModal:document.getElementById('setupModal'),setupAi:document.getElementById('setupAi'),setupCards:document.getElementById('setupCards'),setupDifficulty:document.getElementById('setupDifficulty'),setupMode:document.getElementById('setupMode'),setupTiebreaker:document.getElementById('setupTiebreaker'),setupHelp:document.getElementById('setupHelp'),closeSetup:document.getElementById('closeSetup'),cancelSetup:document.getElementById('cancelSetup'),confirmSetup:document.getElementById('confirmSetup'),
@@ -4896,25 +5028,36 @@ function dumpCard(cards,dumpDanger){return cards.slice().sort((a,b)=>dumpDanger?
 
 
 window.updateLockedLayout=function updateLockedLayout(){
-  if(!els.app)return;
+  const appEl=els.app||document.getElementById('app');
+  if(!appEl)return;
+
   const vv=window.visualViewport;
   const widthVals=[vv?vv.width:0,window.innerWidth||0,document.documentElement.clientWidth||0].filter(n=>Number.isFinite(n)&&n>0);
   const heightVals=[vv?vv.height:0,window.innerHeight||0,document.documentElement.clientHeight||0].filter(n=>Number.isFinite(n)&&n>0);
   const rawW=widthVals.length?Math.min(...widthVals):414;
   const rawH=heightVals.length?Math.min(...heightVals):896;
 
+  const probe=document.createElement('div');
+  probe.style.cssText='position:fixed;left:-9999px;top:0;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);visibility:hidden;';
+  document.body.appendChild(probe);
+  const cs=getComputedStyle(probe);
+  const safeTop=parseFloat(cs.paddingTop)||0;
+  const safeBottom=parseFloat(cs.paddingBottom)||0;
+  probe.remove();
+
   const designW=414;
   const designH=896;
   const availableW=Math.min(460,rawW);
-  const availableH=rawH;
+  const availableH=Math.max(320,rawH-safeTop-safeBottom);
   const margin=4;
-  const scale=Math.max(.45,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
+  const scale=Math.max(.42,Math.min((availableW-margin)/designW,(availableH-margin)/designH));
 
   document.documentElement.style.setProperty('--lockedBoardW',`${designW}px`);
   document.documentElement.style.setProperty('--lockedBoardH',`${designH}px`);
   document.documentElement.style.setProperty('--lockedBoardScale',String(scale));
   document.documentElement.style.setProperty('--lockedAppW',`${Math.min(availableW,designW*scale)}px`);
-  document.documentElement.style.setProperty('--lockedAppH',`${availableH}px`);
+  document.documentElement.style.setProperty('--lockedAppH',`${rawH}px`);
+  document.documentElement.style.setProperty('--lockedBoardTop',`${safeTop}px`);
 }
 
 function updateLowerAnchors(){
@@ -4923,17 +5066,19 @@ function updateLowerAnchors(){
   const ringRect=els.trickRing.getBoundingClientRect();
   if(!tableRect.height||!ringRect.height)return;
 
-  const sampleSeat=els.table.querySelector('.seat.pos-leftLow,.seat.pos-rightLow');
-  const seatH=sampleSeat ? sampleSeat.getBoundingClientRect().height : 82;
+  const scale=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--lockedBoardScale'))||1;
+  const sampleSeat=els.table.querySelector('.seat.pos-leftLow,.seat.pos-rightLow,.seat.pos-leftHigh,.seat.pos-rightHigh');
+  const seatH=(sampleSeat ? sampleSeat.getBoundingClientRect().height : 58)/scale;
   const gap=4;
-  const centerY=(ringRect.bottom-tableRect.top)+seatH/2+gap;
-  els.table.style.setProperty('--lowerSeatCenterY',`${Math.round(centerY)}px`);
 
-  const centerAreaRect=els.centerArea ? els.centerArea.getBoundingClientRect() : null;
-  if(centerAreaRect){
-    const ringBottomInCenter=ringRect.bottom-centerAreaRect.top;
-    document.documentElement.style.setProperty('--trumpTopAfterRing',`${Math.round(ringBottomInCenter+3)}px`);
-  }
+  const ringTop=(ringRect.top-tableRect.top)/scale;
+  const ringBottom=(ringRect.bottom-tableRect.top)/scale;
+
+  const upperY=Math.max(106,ringTop-seatH/2-gap);
+  const lowerY=ringBottom+seatH/2+gap;
+
+  els.table.style.setProperty('--upperSeatCenterY',`${Math.round(upperY)}px`);
+  els.table.style.setProperty('--lowerSeatCenterY',`${Math.round(lowerY)}px`);
 }
 
 function render(winningIndex=null){
