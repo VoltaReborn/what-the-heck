@@ -2343,6 +2343,31 @@ body.veryTallScreen:not(.pwaMode) .pos-rightLow{
   display:none!important;
 }
 
+
+/* v69 undo over-expansion: center area stays clear of seats/trump/human */
+body.pwaMode .centerArea{
+  top:51%!important;
+  width:min(76vw,340px)!important;
+  height:min(38dvh,315px)!important;
+  gap:8px!important;
+}
+body.pwaMode .pos-top{top:14px!important;}
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh{top:17%!important;}
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow{top:68%!important;}
+body.pwaMode .pos-bottom{bottom:14px!important;}
+body.pwaMode .table::after{inset:76px 36px 84px!important;}
+
+body.tallScreen:not(.pwaMode) .centerArea{
+  top:51%!important;
+  height:min(38dvh,315px)!important;
+}
+body.tallScreen:not(.pwaMode) .pos-leftHigh,
+body.tallScreen:not(.pwaMode) .pos-rightHigh{top:18%!important;}
+body.tallScreen:not(.pwaMode) .pos-leftLow,
+body.tallScreen:not(.pwaMode) .pos-rightLow{top:68%!important;}
+
 </style>
 </head>
 <body>
