@@ -2996,6 +2996,33 @@ body.tallScreen .trick-bottom{
   }
 }
 
+
+/* v84 lock lower AI seats and trump below the play area */
+.pos-leftLow,
+.pos-rightLow,
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:var(--lowerSeatCenterY,75%)!important;
+  transform:translateY(-50%)!important;
+}
+
+/* Stop using accumulated translateY nudges for trump. It belongs directly under the trick ring. */
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:none!important;
+  margin-top:3px!important;
+}
+
+/* Give the center area enough lower track for trump, but don't use transforms to fake it. */
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+.centerArea{
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+}
+
 </style>
 </head>
 <body>
@@ -3114,7 +3141,7 @@ body.tallScreen .trick-bottom{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v83';
+const APP_VERSION='v84';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4580,8 +4607,28 @@ function lowestBest(cards){return cards.slice().sort((a,b)=>playPower(a)-playPow
 function lowestWinner(cards){return cards.slice().sort((a,b)=>playPower(a)-playPower(b))[0];}
 function dumpCard(cards,dumpDanger){return cards.slice().sort((a,b)=>dumpDanger?playPower(b)-playPower(a):playPower(a)-playPower(b))[0];}
 
+
+function updateLowerAnchors(){
+  if(!els.table||!els.trickRing)return;
+  const tableRect=els.table.getBoundingClientRect();
+  const ringRect=els.trickRing.getBoundingClientRect();
+  if(!tableRect.height||!ringRect.height)return;
+
+  const sampleSeat=els.table.querySelector('.seat.pos-leftLow,.seat.pos-rightLow');
+  const seatH=sampleSeat ? sampleSeat.getBoundingClientRect().height : 82;
+  const gap=4;
+  const centerY=(ringRect.bottom-tableRect.top)+seatH/2+gap;
+  els.table.style.setProperty('--lowerSeatCenterY',`${Math.round(centerY)}px`);
+
+  const centerAreaRect=els.centerArea ? els.centerArea.getBoundingClientRect() : null;
+  if(centerAreaRect){
+    const ringBottomInCenter=ringRect.bottom-centerAreaRect.top;
+    document.documentElement.style.setProperty('--trumpTopAfterRing',`${Math.round(ringBottomInCenter+3)}px`);
+  }
+}
+
 function render(winningIndex=null){
-  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();{const canContinue=hasSave();els.continueBtn.disabled=!canContinue;els.continueBtn.classList.toggle('continueUnavailable',!canContinue);}requestAnimationFrame(updateTurnRacerOverlay);
+  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();{const canContinue=hasSave();els.continueBtn.disabled=!canContinue;els.continueBtn.classList.toggle('continueUnavailable',!canContinue);}requestAnimationFrame(()=>{updateLowerAnchors();updateTurnRacerOverlay();});
 }
 function renderSeats(){
   [...els.table.querySelectorAll('.seat')].forEach(n=>n.remove());
@@ -4822,8 +4869,8 @@ function setupDrawerDrag(){
 
 function bindEvents(){
   setupDrawerDrag();
-  window.addEventListener('resize',()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateTurnRacerOverlay();});
-  window.addEventListener('orientationchange',()=>setTimeout(()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateTurnRacerOverlay();},120));
+  window.addEventListener('resize',()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();});
+  window.addEventListener('orientationchange',()=>setTimeout(()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();},120));
   els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){render();exitSplash();if(game.phase==='bidding')continueBidding();else if(game.phase==='playing'||game.phase==='trumpLocking'){if(game.phase==='trumpLocking')game.phase='playing';continuePlay();}else if(game.phase==='handOver')showRecap(false);else if(game.phase==='gameOver')showRecap(true);}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
   els.closeSetup.onclick=()=>closeModal(els.setupModal);els.cancelSetup.onclick=()=>closeModal(els.setupModal);els.confirmSetup.onclick=startNewGameFromSetup;els.setupTiebreaker.onclick=()=>els.setupTiebreaker.classList.toggle('on');
   els.closeConfirm.onclick=()=>{pendingConfirm=null;closeModal(els.confirmModal);};els.cancelConfirm.onclick=els.closeConfirm.onclick;els.confirmPlayBtn.onclick=()=>{if(pendingConfirm)playHumanCard(pendingConfirm);};
