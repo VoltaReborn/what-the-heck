@@ -2818,6 +2818,92 @@ body.tallScreen .trick-rightLow{
   }
 }
 
+
+/* v80 cleaner trick area + smaller trump panel */
+.trickCard .playedBy{
+  display:none!important;
+}
+.trickCard{
+  cursor:pointer;
+}
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:54.5%!important;
+  height:min(47dvh,420px)!important;
+  width:min(80vw,362px)!important;
+}
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:translateY(-22px)!important;
+  margin-bottom:-16px!important;
+}
+body.pwaMode .trickRing,
+body.tallScreen .trickRing{
+  min-height:205px!important;
+}
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  transform:translateY(24px)!important;
+}
+
+/* Compact portrait trump panel: less padding around the card. */
+.trumpPanel{
+  width:82px!important;
+  min-height:104px!important;
+  padding:5px 5px 6px!important;
+  gap:3px!important;
+  border-radius:14px!important;
+}
+.trumpTitle{
+  font-size:.54rem!important;
+  letter-spacing:.13em!important;
+}
+.trumpPanel .trumpCardWrap{
+  --cw:42px!important;
+  --ch:58px!important;
+}
+.trumpStatus{
+  min-width:50px!important;
+  padding:2px 6px 3px!important;
+  font-size:.50rem!important;
+}
+
+/* More vertical separation for played cards now that names are gone. */
+body.pwaMode .trick-top,
+body.tallScreen .trick-top{
+  top:14%!important;
+}
+body.pwaMode .trick-bottom,
+body.tallScreen .trick-bottom{
+  top:87%!important;
+}
+body.pwaMode .trick-leftHigh,
+body.pwaMode .trick-rightHigh,
+body.tallScreen .trick-leftHigh,
+body.tallScreen .trick-rightHigh{
+  top:24%!important;
+}
+body.pwaMode .trick-leftLow,
+body.pwaMode .trick-rightLow,
+body.tallScreen .trick-leftLow,
+body.tallScreen .trick-rightLow{
+  top:76%!important;
+}
+@media (max-height:760px){
+  body.pwaMode .centerArea,
+  body.tallScreen .centerArea{
+    height:min(42dvh,350px)!important;
+  }
+  body.pwaMode .trickRing,
+  body.tallScreen .trickRing{
+    min-height:176px!important;
+  }
+  body.pwaMode .trumpBox,
+  body.tallScreen .trumpBox{
+    transform:translateY(18px)!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2936,7 +3022,7 @@ body.tallScreen .trick-rightLow{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v79';
+const APP_VERSION='v81';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4429,7 +4515,17 @@ function renderTopInfo(){
 }
 function renderTrick(winningIndex){
   if(!game||!game.currentTrick.length){els.trickRing.innerHTML=`<div class="emptyCenter">${game?game.phase==='bidding'?'':playerLeadPhrase(game.leaderIndex,'next'):'Start a game to reveal trump.'}</div>`;return;}
-  els.trickRing.innerHTML=game.currentTrick.map((t,idx)=>{const pos=playerPos(t.playerIndex);const classes=[winningIndex===t.playerIndex?'playedWin':'',idx===0?'ledCard':'',cardMotionCardId===t.card.id?'motionTargetHold':''].filter(Boolean).join(' ');return `<div class="trickCard trick-${pos}">${cardHTML(t.card,classes)}<div class="playedBy">${escapeHtml(game.players[t.playerIndex].name)}</div></div>`;}).join('');
+  els.trickRing.innerHTML=game.currentTrick.map((t,idx)=>{
+    const pos=playerPos(t.playerIndex);
+    const playerName=game.players[t.playerIndex].name;
+    const classes=[winningIndex===t.playerIndex?'playedWin':'',idx===0?'ledCard':'',cardMotionCardId===t.card.id?'motionTargetHold':''].filter(Boolean).join(' ');
+    return `<div class="trickCard trick-${pos}" data-played-by="${escapeHtml(playerName)}" data-played-card="${escapeHtml(cardLabel(t.card))}">${cardHTML(t.card,classes)}</div>`;
+  }).join('');
+  els.trickRing.querySelectorAll('.trickCard[data-played-by]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      showToast(el.dataset.playedBy);
+    });
+  });
 }
 function triggerTrumpStatusFlash(status){
   trumpFlashStatus=status;
