@@ -2325,6 +2325,24 @@ body.compactHeight .pos-rightHigh{top:24%!important;}
 body.compactHeight .pos-leftLow,
 body.compactHeight .pos-rightLow{top:58%!important;}
 
+
+/* v68 fix lower-seat/trump overlap + hide unusable Continue button */
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow{
+  top:68%!important;
+}
+body.tallScreen:not(.pwaMode) .pos-leftLow,
+body.tallScreen:not(.pwaMode) .pos-rightLow{
+  top:68%!important;
+}
+body.veryTallScreen:not(.pwaMode) .pos-leftLow,
+body.veryTallScreen:not(.pwaMode) .pos-rightLow{
+  top:69%!important;
+}
+.continueUnavailable{
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -2754,7 +2772,9 @@ function showSplash(){
   els.splash.style.removeProperty('opacity');
   document.body.classList.add('splashShowing');
   document.body.classList.remove('menuReady','drawerTabPop','splashExiting');
-  els.continueBtn.disabled=!hasSave();
+  const canContinue=hasSave();
+  els.continueBtn.disabled=!canContinue;
+  els.continueBtn.classList.toggle('continueUnavailable',!canContinue);
 }
 
 function bidPacing(){return {fast:{think:1050,show:1300,ask:550},normal:{think:1650,show:2050,ask:700},slow:{think:2250,show:2700,ask:850}}[settings.animationSpeed]||{think:1650,show:2050,ask:700};}
@@ -3889,7 +3909,7 @@ function lowestWinner(cards){return cards.slice().sort((a,b)=>playPower(a)-playP
 function dumpCard(cards,dumpDanger){return cards.slice().sort((a,b)=>dumpDanger?playPower(b)-playPower(a):playPower(a)-playPower(b))[0];}
 
 function render(winningIndex=null){
-  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();els.continueBtn.disabled=!hasSave();requestAnimationFrame(updateTurnRacerOverlay);
+  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();{const canContinue=hasSave();els.continueBtn.disabled=!canContinue;els.continueBtn.classList.toggle('continueUnavailable',!canContinue);}requestAnimationFrame(updateTurnRacerOverlay);
 }
 function renderSeats(){
   [...els.table.querySelectorAll('.seat')].forEach(n=>n.remove());
