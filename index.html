@@ -2482,6 +2482,81 @@ body.tallScreen .pos-bottom{
   letter-spacing:.03em;
 }
 
+
+/* v74 app shell fill + drawer drag */
+.app{
+  position:fixed!important;
+  left:50%!important;
+  right:auto!important;
+  top:0!important;
+  bottom:0!important;
+  width:min(100vw,var(--boardMax))!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+  overflow:hidden!important;
+}
+.splash{
+  position:fixed!important;
+  left:50%!important;
+  right:auto!important;
+  top:0!important;
+  bottom:0!important;
+  width:min(100vw,var(--boardMax))!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+  overflow:hidden!important;
+}
+.gameBoard{
+  position:absolute!important;
+  inset:0!important;
+  height:auto!important;
+  min-height:0!important;
+}
+html,body{
+  background:var(--felt)!important;
+  overflow:hidden!important;
+}
+
+/* Keep the layout clear once the board actually reaches the bottom. */
+body.pwaMode .centerArea,
+body.tallScreen .centerArea{
+  top:53%!important;
+  height:min(36dvh,315px)!important;
+}
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:19%!important;
+}
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:63%!important;
+}
+body.pwaMode .pos-bottom,
+body.tallScreen .pos-bottom{
+  bottom:16px!important;
+}
+
+/* Swipe/drag drawer behavior. */
+.drawer{
+  --drawerDrag:0px;
+  transform:translateX(calc(100% + var(--drawerDrag)))!important;
+  touch-action:pan-y!important;
+}
+.drawer.open{
+  transform:translateX(var(--drawerDrag))!important;
+}
+.drawer.dragging{
+  transition:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -2600,7 +2675,7 @@ body.tallScreen .pos-bottom{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v73';
+const APP_VERSION='v74';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4196,12 +4271,69 @@ function renderSettings(){els.pages.settings.innerHTML=pageShell('Settings',`<di
 
 function renderAppearance(){els.pages.appearance.innerHTML=pageShell('Appearance',`<div class="section"><h3>Table Felt</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.felt==='green'?'active':''}" data-felt="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.felt==='blue'?'active':''}" data-felt="blue"><span class="colorPill blue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.felt==='purple'?'active':''}" data-felt="purple"><span class="colorPill purple"></span>Purple</button><button class="segBtn appearanceChoice ${settings.felt==='black'?'active':''}" data-felt="black"><span class="colorPill black"></span>Black</button></div></div><div class="section"><h3>Card Backs</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.cardBack==='blue'?'active':''}" data-back="blue"><span class="colorPill cardBlue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.cardBack==='red'?'active':''}" data-back="red"><span class="colorPill red"></span>Red</button><button class="segBtn appearanceChoice ${settings.cardBack==='green'?'active':''}" data-back="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.cardBack==='black'?'active':''}" data-back="black"><span class="colorPill black"></span>Black</button></div></div>`);}
 
-function openDrawer(page){els.drawer.classList.add('open');if(page)openPage(page);}
-function closeDrawer(){els.drawer.classList.remove('open');openHome();}
+function openDrawer(page){
+  els.drawer.style.setProperty('--drawerDrag','0px');
+  els.drawer.classList.add('open');
+  if(page)openPage(page);
+}
+function closeDrawer(){
+  els.drawer.style.setProperty('--drawerDrag','0px');
+  els.drawer.classList.remove('open');
+  openHome();
+}
 function openHome(){els.drawerTitle.textContent='Game Menu';els.drawerHome.classList.remove('hidden');Object.values(els.pages).forEach(p=>p.classList.remove('active'));}
 function openPage(page){els.drawerTitle.textContent='Game Menu';els.drawerHome.classList.add('hidden');Object.values(els.pages).forEach(p=>p.classList.remove('active'));els.pages[page].classList.add('active');renderDrawerPages();}
 
+
+function setupDrawerDrag(){
+  if(!els.drawer)return;
+  let dragging=false;
+  let startX=0;
+  let dragX=0;
+  let startTime=0;
+
+  const begin=e=>{
+    if(!els.drawer.classList.contains('open'))return;
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    dragging=true;
+    startX=e.clientX;
+    dragX=0;
+    startTime=performance.now();
+    els.drawer.classList.add('dragging');
+    try{els.drawer.setPointerCapture(e.pointerId);}catch(err){}
+  };
+
+  const move=e=>{
+    if(!dragging)return;
+    dragX=Math.max(0,e.clientX-startX);
+    els.drawer.style.setProperty('--drawerDrag',`${dragX}px`);
+    if(dragX>6)e.preventDefault();
+  };
+
+  const end=e=>{
+    if(!dragging)return;
+    dragging=false;
+    const elapsed=Math.max(1,performance.now()-startTime);
+    const velocity=dragX/elapsed;
+    const threshold=Math.min(120,els.drawer.getBoundingClientRect().width*.28);
+    els.drawer.classList.remove('dragging');
+    if(dragX>threshold||velocity>.65){
+      closeDrawer();
+    }else{
+      els.drawer.style.setProperty('--drawerDrag','0px');
+      els.drawer.classList.add('open');
+    }
+    try{els.drawer.releasePointerCapture(e.pointerId);}catch(err){}
+  };
+
+  els.drawer.addEventListener('pointerdown',begin);
+  els.drawer.addEventListener('pointermove',move);
+  els.drawer.addEventListener('pointerup',end);
+  els.drawer.addEventListener('pointercancel',end);
+}
+
 function bindEvents(){
+  setupDrawerDrag();
   window.addEventListener('resize',()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateTurnRacerOverlay();});
   window.addEventListener('orientationchange',()=>setTimeout(()=>{if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateTurnRacerOverlay();},120));
   els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){render();exitSplash();if(game.phase==='bidding')continueBidding();else if(game.phase==='playing')continuePlay();else if(game.phase==='handOver')showRecap(false);else if(game.phase==='gameOver')showRecap(true);}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
