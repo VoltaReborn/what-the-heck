@@ -4019,6 +4019,13 @@ body.tallScreen .trumpBox{
   z-index:999903!important;
 }
 
+
+/* v132 hide Continue Game completely when there is no valid save */
+#continueBtn.hidden,
+#continueBtn[hidden]{
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -4159,7 +4166,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v131';
+const APP_VERSION='v132';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4207,7 +4214,24 @@ function loadSettings(){
 }
 function saveSettings(){localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));applyAppearance();updateTurnRacerOverlay();}
 function saveGame(){if(game){localStorage.setItem(SAVE_KEY,JSON.stringify(game));}}
-function hasSave(){return !!localStorage.getItem(SAVE_KEY);}
+function hasSave(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    return !!(data&&Array.isArray(data.players)&&data.players.length&&typeof data.phase==='string');
+  }catch(e){
+    localStorage.removeItem(SAVE_KEY);
+    return false;
+  }
+}
+function updateContinueButton(){
+  const canContinue=hasSave();
+  els.continueBtn.disabled=!canContinue;
+  els.continueBtn.hidden=!canContinue;
+  els.continueBtn.classList.toggle('hidden',!canContinue);
+  els.continueBtn.classList.toggle('continueUnavailable',!canContinue);
+}
 function loadGame(){try{const data=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(data&&data.players){game=data;normalizeLoadedGame();return true;}}catch(e){}return false;}
 function normalizeLoadedGame(){if(!game||!game.players)return;for(const p of game.players){if(Array.isArray(p.hand))sortHand(p.hand);ensurePlayerStats(p);}}
 function clearAiTimer(){if(aiTimer){clearTimeout(aiTimer);aiTimer=null;}biddingAnimating=false;hideBidBubble(true);bidThinkingIndex=null;bidFlashIndex=null;}
@@ -4501,9 +4525,7 @@ function showSplash(){
   els.splash.style.removeProperty('opacity');
   document.body.classList.add('splashShowing');
   document.body.classList.remove('menuReady','drawerTabPop','splashExiting');
-  const canContinue=hasSave();
-  els.continueBtn.disabled=!canContinue;
-  els.continueBtn.classList.toggle('continueUnavailable',!canContinue);
+  updateContinueButton();
 }
 
 function bidPacing(){return {fast:{think:1050,show:1300,ask:550},normal:{think:1650,show:2050,ask:700},slow:{think:2250,show:2700,ask:850}}[settings.animationSpeed]||{think:1650,show:2050,ask:700};}
@@ -5705,7 +5727,7 @@ window.updateLockedLayout=function updateLockedLayout(){}
 function updateLowerAnchors(){}
 
 function render(winningIndex=null){
-  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();syncBidModalToTurn();{const canContinue=hasSave();els.continueBtn.disabled=!canContinue;els.continueBtn.classList.toggle('continueUnavailable',!canContinue);}requestAnimationFrame(()=>{updateLowerAnchors();updateTurnRacerOverlay();});
+  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();syncBidModalToTurn();updateContinueButton();requestAnimationFrame(()=>{updateLowerAnchors();updateTurnRacerOverlay();});
 }
 function renderSeats(){
   [...els.table.querySelectorAll('.seat')].forEach(n=>n.remove());
