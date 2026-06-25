@@ -3039,114 +3039,838 @@ body.tallScreen .trumpBox{
 }
 
 
-/* v102 completely smooth trump LOCKED/BROKEN animation
-   No flashing filters, no min-height jumps, no top-floating pill. The panel reveals
-   the bottom pill by animating max-height, then returns exactly to normal size. */
+
+/* v103 fixed smooth trump LOCKED/BROKEN animation
+   This replaces the v102 max-height attempt. The panel now animates its actual
+   height, and the pill reveals with opacity + clip-path, so it is smooth and visible. */
 
 .trumpPanel{
-  height:auto!important;
-  min-height:88px!important;
-  max-height:88px!important;
+  box-sizing:border-box!important;
+  height:88px;
+  min-height:0!important;
+  max-height:none!important;
+  grid-template-rows:min-content min-content 0px!important;
   overflow:hidden!important;
-  transition:border-color 260ms ease, box-shadow 260ms ease!important;
-  will-change:max-height,border-color,box-shadow!important;
+  padding:4px 4px 5px!important;
+  row-gap:4px!important;
+  gap:4px!important;
+  will-change:height,border-color,box-shadow!important;
   transform:translateZ(0)!important;
 }
 .trumpPanel.flash-locked,
 .trumpPanel.flash-broken{
-  min-height:88px!important;
-  padding-bottom:5px!important;
+  min-height:0!important;
+  max-height:none!important;
   grid-template-rows:min-content min-content 15px!important;
+  padding-bottom:5px!important;
   row-gap:4px!important;
   gap:4px!important;
 }
 .trumpPanel.flash-locked{
-  animation:trumpPanelSmoothLocked var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+  animation:trumpPanelLockedV103 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
 }
 .trumpPanel.flash-broken{
-  animation:trumpPanelSmoothBroken var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+  animation:trumpPanelBrokenV103 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
 }
+
 .trumpStatus,
 .trumpStatus.flash,
 .trumpStatus.flash.locked,
 .trumpStatus.flash.broken{
   position:static!important;
+  left:auto!important;
+  top:auto!important;
+  order:3!important;
   display:grid!important;
   place-items:center!important;
+  min-width:54px!important;
   height:15px!important;
   min-height:15px!important;
   max-height:15px!important;
   padding:1px 7px!important;
   margin:0!important;
-  opacity:0!important;
-  transform:translateY(-2px) scale(.86,.35)!important;
-  transform-origin:center top!important;
+  border-radius:999px!important;
+  font-size:.47rem!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  opacity:0;
+  transform:none!important;
   filter:none!important;
-  will-change:opacity,transform!important;
+  clip-path:inset(50% 0 50% 0 round 999px);
+  will-change:opacity,clip-path!important;
 }
 .trumpStatus.flash{
-  animation:trumpPillSmoothInOut var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+  animation:trumpPillRevealV103 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
 }
-@keyframes trumpPanelSmoothLocked{
+.trumpStatus.flash.locked{
+  color:#171100!important;
+  background:rgba(240,202,104,.96)!important;
+  border:1px solid rgba(255,255,255,.45)!important;
+}
+.trumpStatus.flash.broken{
+  color:#061a0d!important;
+  background:rgba(71,226,126,.94)!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+}
+
+@keyframes trumpPanelLockedV103{
   0%{
-    max-height:88px;
+    height:88px;
     border-color:rgba(255,255,255,.14);
     box-shadow:0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
-  18%{
-    max-height:108px;
-    border-color:rgba(240,202,104,.88);
+  20%{
+    height:108px;
+    border-color:rgba(240,202,104,.90);
     box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
-  72%{
-    max-height:108px;
-    border-color:rgba(240,202,104,.88);
+  74%{
+    height:108px;
+    border-color:rgba(240,202,104,.90);
     box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
   100%{
-    max-height:88px;
+    height:88px;
     border-color:rgba(240,202,104,.66);
     box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
 }
-@keyframes trumpPanelSmoothBroken{
+@keyframes trumpPanelBrokenV103{
   0%{
-    max-height:88px;
+    height:88px;
     border-color:rgba(240,202,104,.66);
     box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
-  18%{
-    max-height:108px;
+  20%{
+    height:108px;
     border-color:rgba(71,226,126,.90);
     box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
-  72%{
-    max-height:108px;
+  74%{
+    height:108px;
     border-color:rgba(71,226,126,.90);
     box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
   100%{
-    max-height:88px;
+    height:88px;
     border-color:rgba(71,226,126,.72);
     box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
   }
 }
-@keyframes trumpPillSmoothInOut{
+@keyframes trumpPillRevealV103{
   0%{
     opacity:0;
-    transform:translateY(-2px) scale(.86,.35);
+    clip-path:inset(50% 0 50% 0 round 999px);
   }
-  18%{
+  20%{
     opacity:1;
-    transform:translateY(0) scale(1,1);
+    clip-path:inset(0 0 0 0 round 999px);
   }
-  72%{
+  74%{
     opacity:1;
-    transform:translateY(0) scale(1,1);
+    clip-path:inset(0 0 0 0 round 999px);
   }
   100%{
     opacity:0;
-    transform:translateY(2px) scale(.88,.28);
+    clip-path:inset(50% 0 50% 0 round 999px);
+  }
+}
+
+
+/* v105 trump bottom-growth + vertical bid bubbles */
+
+/* Trump title and card are locked in place. Only the panel bottom grows for the pill. */
+.trumpPanel{
+  position:relative!important;
+  display:block!important;
+  box-sizing:border-box!important;
+  width:72px!important;
+  height:88px;
+  min-height:0!important;
+  max-height:none!important;
+  padding:0!important;
+  overflow:hidden!important;
+  will-change:height,border-color,box-shadow!important;
+  transform:translateZ(0)!important;
+}
+.trumpTitle{
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:5px!important;
+  height:9px!important;
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  line-height:9px!important;
+  color:var(--gold)!important;
+  font-weight:1000!important;
+  text-transform:uppercase!important;
+  letter-spacing:.14em!important;
+  font-size:.51rem!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.55)!important;
+  overflow:visible!important;
+}
+.trumpPanel .trumpCardWrap{
+  position:absolute!important;
+  left:50%!important;
+  top:18px!important;
+  --cw:46px!important;
+  --ch:64px!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+}
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  height:88px;
+  padding:0!important;
+}
+.trumpPanel.flash-locked{
+  animation:trumpPanelLockedV105 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+.trumpPanel.flash-broken{
+  animation:trumpPanelBrokenV105 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  position:absolute!important;
+  left:50%!important;
+  bottom:5px!important;
+  top:auto!important;
+  order:0!important;
+  display:grid!important;
+  place-items:center!important;
+  min-width:54px!important;
+  height:15px!important;
+  min-height:15px!important;
+  max-height:15px!important;
+  padding:1px 7px!important;
+  margin:0!important;
+  border-radius:999px!important;
+  font-size:.47rem!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  opacity:0;
+  transform:translateX(-50%) scaleY(.25)!important;
+  transform-origin:center center!important;
+  filter:none!important;
+  clip-path:none!important;
+  will-change:opacity,transform!important;
+}
+.trumpStatus.flash{
+  animation:trumpPillRevealV105 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+.trumpStatus.flash.locked{
+  color:#171100!important;
+  background:rgba(240,202,104,.96)!important;
+  border:1px solid rgba(255,255,255,.45)!important;
+}
+.trumpStatus.flash.broken{
+  color:#061a0d!important;
+  background:rgba(71,226,126,.94)!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+}
+@keyframes trumpPanelLockedV105{
+  0%{height:88px;border-color:rgba(255,255,255,.14);box-shadow:0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  20%{height:108px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  74%{height:108px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+@keyframes trumpPanelBrokenV105{
+  0%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  20%{height:108px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  74%{height:108px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(71,226,126,.72);box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+@keyframes trumpPillRevealV105{
+  0%{opacity:0;transform:translateX(-50%) scaleY(.25)!important;}
+  20%{opacity:1;transform:translateX(-50%) scaleY(1)!important;}
+  74%{opacity:1;transform:translateX(-50%) scaleY(1)!important;}
+  100%{opacity:0;transform:translateX(-50%) scaleY(.25)!important;}
+}
+
+/* Bid bubbles now always sit vertically relative to the player card:
+   upper cards below, lower cards above. No left/right side bubbles. */
+.bidBubble.dynamic.anchor-left::after,
+.bidBubble.dynamic.anchor-right::after{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:-5px!important;
+  margin-left:-6px!important;
+  margin-top:0!important;
+}
+
+
+/* v106 put player name underneath enlarged Tricks animation */
+.trickStatClone{
+  z-index:46000!important;
+}
+.seat.trickAwardActive .seatName{
+  position:relative!important;
+  z-index:0!important;
+}
+.seat.trickAwardActive .seatRows,
+.seat.trickAwardActive .seatStatus{
+  position:relative!important;
+  z-index:1!important;
+}
+
+
+/* v107 hide player name during Tricks award animation */
+.seat.trickAwardActive .seatName,
+.seat.trickAwardActive .seatName *{
+  visibility:hidden!important;
+  opacity:0!important;
+}
+
+
+/* v108 animate player card details back after Tricks award */
+.seat.trickAwardReturning .seatName,
+.seat.trickAwardReturning .seatRows{
+  animation:trickAwardReturnIn 360ms cubic-bezier(.18,.78,.22,1) both!important;
+}
+.seat.trickAwardReturning .seatRows{
+  animation-delay:35ms!important;
+}
+@keyframes trickAwardReturnIn{
+  0%{
+    opacity:0;
+    transform:translateY(5px) scale(.96);
+    filter:brightness(1.2);
+  }
+  72%{
+    opacity:1;
+    transform:translateY(-1px) scale(1.012);
+    filter:brightness(1.05);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    filter:brightness(1);
+  }
+}
+
+
+/* v109 stronger return animation + readable trump LOCKED/BROKEN pill */
+
+/* Make sure the old CSS-only return class cannot mask the WAAPI return effect. */
+.seat.trickAwardReturning .seatName,
+.seat.trickAwardReturning .seatRows{
+  animation:none!important;
+}
+
+/* Give the bottom pill real vertical room and readable text. */
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  min-width:64px!important;
+  height:19px!important;
+  min-height:19px!important;
+  max-height:19px!important;
+  padding:2px 8px!important;
+  bottom:7px!important;
+  font-size:.54rem!important;
+  line-height:1!important;
+  letter-spacing:.045em!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+}
+
+/* Grow the trump box farther downward for the pill; title/card remain fixed. */
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  height:88px;
+}
+@keyframes trumpPanelLockedV105{
+  0%{height:88px;border-color:rgba(255,255,255,.14);box-shadow:0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  20%{height:120px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  74%{height:120px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+@keyframes trumpPanelBrokenV105{
+  0%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  20%{height:120px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  74%{height:120px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(71,226,126,.72);box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+
+
+/* v110 non-glitchy return effect + much more readable trump pill */
+
+/* Return animation starts from a real prepared hidden state, then grows/slides in. */
+.seat.trickAwardReturnPrepare:not(.trickAwardReturning) .seatName,
+.seat.trickAwardReturnPrepare:not(.trickAwardReturning) .seatRows{
+  opacity:0!important;
+  transform:translateY(6px) scale(.78)!important;
+  transform-origin:center center!important;
+}
+.seat.trickAwardReturning .seatName,
+.seat.trickAwardReturning .seatRows{
+  animation:trickAwardReturnGrowV110 430ms cubic-bezier(.16,.82,.18,1) both!important;
+  transform-origin:center center!important;
+}
+.seat.trickAwardReturning .seatRows{
+  animation-delay:55ms!important;
+}
+@keyframes trickAwardReturnGrowV110{
+  0%{
+    opacity:0;
+    transform:translateY(7px) scale(.72);
+  }
+  62%{
+    opacity:1;
+    transform:translateY(-2px) scale(1.08);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+/* The LOCKED/BROKEN pill should never be vertically scrunched. */
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  min-width:68px!important;
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  padding:3px 8px!important;
+  bottom:8px!important;
+  font-size:.55rem!important;
+  line-height:1!important;
+  letter-spacing:.035em!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+  transform:translateX(-50%)!important;
+  scale:1 .92;
+  opacity:0;
+}
+
+/* Grow farther downward. It is temporary, so overlap below is allowed. */
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  overflow:visible!important;
+}
+.trumpStatus.flash{
+  animation:trumpPillReadableV110 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+@keyframes trumpPillReadableV110{
+  0%{opacity:0;scale:1 .72;}
+  20%{opacity:1;scale:1 1;}
+  74%{opacity:1;scale:1 1;}
+  100%{opacity:0;scale:1 .72;}
+}
+@keyframes trumpPanelLockedV105{
+  0%{height:88px;border-color:rgba(255,255,255,.14);box-shadow:0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  20%{height:134px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  74%{height:134px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+@keyframes trumpPanelBrokenV105{
+  0%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  20%{height:134px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  74%{height:134px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(71,226,126,.72);box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+
+
+/* v111 non-flicker clone return + trump pill above You card */
+
+/* Disable the previous return-class animation path. v111 uses fixed ghosts instead. */
+.seat.trickAwardReturnPrepare .seatName,
+.seat.trickAwardReturnPrepare .seatRows,
+.seat.trickAwardReturning .seatName,
+.seat.trickAwardReturning .seatRows{
+  animation:none!important;
+}
+
+/* Fixed-position return ghosts animate in, then the real text is revealed underneath. */
+.trickReturnGhost{
+  position:fixed!important;
+  z-index:46000!important;
+  pointer-events:none!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  transform-origin:center center!important;
+  will-change:opacity,transform!important;
+  visibility:visible!important;
+}
+
+/* Put the trump box/pill above the player cards when the temporary pill extends downward. */
+.centerArea,
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+body.tallScreen:not(.pwaMode) .centerArea,
+body.compactHeight .centerArea{
+  z-index:12!important;
+}
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  z-index:30!important;
+}
+.trumpPanel,
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  z-index:31!important;
+}
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  z-index:32!important;
+}
+
+
+/* v112 tighter trump pill expansion + clean exit before box shrinks */
+
+/* Keep the pill readable, but bring it much closer to the card. */
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  height:21px!important;
+  min-height:21px!important;
+  max-height:21px!important;
+  min-width:68px!important;
+  bottom:8px!important;
+  transform:translateX(-50%)!important;
+  scale:1 .01;
+  opacity:0;
+}
+
+/* The pill shrinks out in place. It does not move upward into the card. */
+.trumpStatus.flash{
+  animation:trumpPillExitCleanV112 var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+
+/* The box stays expanded until the pill is gone, then shrinks back. */
+@keyframes trumpPillExitCleanV112{
+  0%{opacity:0;scale:1 .01;}
+  18%{opacity:1;scale:1 1;}
+  70%{opacity:1;scale:1 1;}
+  82%{opacity:0;scale:1 .01;}
+  100%{opacity:0;scale:1 .01;}
+}
+@keyframes trumpPanelLockedV105{
+  0%{height:88px;border-color:rgba(255,255,255,.14);box-shadow:0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  18%{height:116px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  84%{height:116px;border-color:rgba(240,202,104,.90);box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+@keyframes trumpPanelBrokenV105{
+  0%{height:88px;border-color:rgba(240,202,104,.66);box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  18%{height:116px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  84%{height:116px;border-color:rgba(71,226,126,.90);box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+  100%{height:88px;border-color:rgba(71,226,126,.72);box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);}
+}
+
+
+/* v115 tighten trump LOCKED/BROKEN pill inset and enlarge text */
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  width:62px!important;
+  min-width:62px!important;
+  max-width:62px!important;
+  height:21px!important;
+  min-height:21px!important;
+  max-height:21px!important;
+  padding:2px 4px!important;
+  bottom:8px!important;
+  font-size:.60rem!important;
+  line-height:1!important;
+  letter-spacing:.015em!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+  border-radius:999px!important;
+}
+
+
+/* v116 New Game modal cleanup */
+#setupModal .controlRow{
+  gap:8px!important;
+}
+#setupModal .controlRow label{
+  flex:0 0 auto!important;
+}
+#setupMode{
+  width:255px!important;
+  max-width:68%!important;
+  min-width:0!important;
+  font-size:.82rem!important;
+  padding-left:12px!important;
+  padding-right:30px!important;
+}
+#setupHelp{
+  margin-top:8px!important;
+  margin-bottom:0!important;
+  color:#dce8ed!important;
+  line-height:1.25!important;
+}
+
+
+/* v117 polished Start New Game modal */
+#setupModal.setupOverlay{
+  background:radial-gradient(circle at 50% 16%,rgba(240,202,104,.08),transparent 42%),rgba(0,0,0,.66)!important;
+  padding:calc(12px + var(--safeTop)) 10px calc(12px + var(--safeBottom))!important;
+}
+#setupModal .setupCard{
+  width:min(94vw,420px)!important;
+  max-height:92dvh!important;
+  border-radius:22px!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  background:linear-gradient(180deg,rgba(21,33,42,.98),rgba(9,17,23,.985))!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.62),0 0 0 1px rgba(240,202,104,.055),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  overflow:hidden!important;
+}
+#setupModal .setupHead{
+  padding:15px 14px 12px!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012))!important;
+}
+#setupModal .setupTitleBlock{
+  min-width:0!important;
+  display:grid!important;
+  gap:3px!important;
+}
+#setupModal .setupTitleBlock strong{
+  color:var(--gold)!important;
+  font-size:1.06rem!important;
+  letter-spacing:-.015em!important;
+}
+#setupModal .setupTitleBlock span{
+  color:#aebfc8!important;
+  font-size:.69rem!important;
+  font-weight:800!important;
+  line-height:1.16!important;
+}
+#setupModal .setupClose{
+  width:38px!important;
+  height:38px!important;
+  border-radius:14px!important;
+  font-size:1.22rem!important;
+  background:rgba(255,255,255,.10)!important;
+  border-color:rgba(255,255,255,.17)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+#setupModal .setupBody{
+  padding:12px!important;
+  overflow-y:auto!important;
+}
+#setupModal .setupSettingsCard{
+  border-radius:18px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.022))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055)!important;
+  overflow:hidden!important;
+}
+#setupModal .setupRow{
+  min-height:64px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:10px 12px!important;
+  border-top:1px solid rgba(255,255,255,.075)!important;
+}
+#setupModal .setupRow:first-child{
+  border-top:0!important;
+}
+#setupModal .setupLabel{
+  min-width:0!important;
+  display:grid!important;
+  gap:4px!important;
+}
+#setupModal .setupLabel label{
+  font-size:.82rem!important;
+  font-weight:1000!important;
+  color:#f3f8fb!important;
+  line-height:1.05!important;
+  letter-spacing:-.01em!important;
+}
+#setupModal .setupLabel span{
+  display:block!important;
+  color:#91a7b2!important;
+  font-size:.65rem!important;
+  font-weight:800!important;
+  line-height:1.16!important;
+}
+#setupModal .setupRow select{
+  width:132px!important;
+  max-width:none!important;
+  min-height:38px!important;
+  border-radius:14px!important;
+  border:1px solid rgba(255,255,255,.17)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(0,0,0,.08)),#101a21!important;
+  color:#fff!important;
+  padding:5px 30px 5px 12px!important;
+  font-size:.92rem!important;
+  font-weight:1000!important;
+  text-overflow:ellipsis!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+#setupModal #setupAi,
+#setupModal #setupCards{
+  width:62px!important;
+  text-align:center!important;
+}
+#setupModal #setupDifficulty{
+  width:132px!important;
+}
+#setupModal #setupMode{
+  width:188px!important;
+  max-width:52vw!important;
+  font-size:.82rem!important;
+  letter-spacing:-.01em!important;
+}
+#setupModal .setupToggleRow{
+  min-height:62px!important;
+}
+#setupModal .setupToggle{
+  width:54px!important;
+  height:30px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.11)!important;
+  border-color:rgba(255,255,255,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.16)!important;
+}
+#setupModal .setupToggle::after{
+  width:22px!important;
+  height:22px!important;
+  top:3px!important;
+  left:3px!important;
+}
+#setupModal .setupToggle.on{
+  background:linear-gradient(180deg,rgba(240,202,104,.42),rgba(240,202,104,.22))!important;
+  border-color:rgba(240,202,104,.75)!important;
+}
+#setupModal .setupToggle.on::after{
+  transform:translateX(24px)!important;
+  background:var(--gold)!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.32)!important;
+}
+#setupModal .setupHelpCard{
+  margin:10px 0 0!important;
+  padding:10px 12px 10px 32px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(240,202,104,.18)!important;
+  background:linear-gradient(180deg,rgba(240,202,104,.08),rgba(255,255,255,.025))!important;
+  color:#dce7ed!important;
+  font-size:.74rem!important;
+  font-weight:800!important;
+  line-height:1.24!important;
+  position:relative!important;
+}
+#setupModal .setupHelpCard::before{
+  content:"!";
+  position:absolute;
+  left:11px;
+  top:10px;
+  width:14px;
+  height:14px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(240,202,104,.92);
+  color:#171100;
+  font-size:.56rem;
+  font-weight:1000;
+}
+#setupModal .setupFoot{
+  padding:12px!important;
+  gap:10px!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(0,0,0,.10))!important;
+}
+#setupModal .setupFoot .ghostBtn,
+#setupModal .setupFoot .primaryBtn{
+  min-height:46px!important;
+  border-radius:14px!important;
+  padding:10px 15px!important;
+  font-weight:1000!important;
+}
+#setupModal .setupFoot .primaryBtn{
+  min-width:92px!important;
+  box-shadow:0 10px 20px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.20)!important;
+}
+#setupModal .setupFoot .ghostBtn{
+  min-width:92px!important;
+  background:rgba(255,255,255,.075)!important;
+}
+@media (max-width:380px){
+  #setupModal .setupRow{
+    grid-template-columns:1fr!important;
+    align-items:stretch!important;
+    gap:8px!important;
+  }
+  #setupModal .setupRow select,
+  #setupModal #setupMode,
+  #setupModal #setupDifficulty{
+    width:100%!important;
+    max-width:none!important;
+  }
+  #setupModal .setupToggleRow{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;
+  }
+}
+
+
+/* v118 fix compact numeric selects in Start New Game modal */
+#setupModal #setupAi,
+#setupModal #setupCards{
+  width:78px!important;
+  min-width:78px!important;
+  max-width:78px!important;
+  padding-left:15px!important;
+  padding-right:28px!important;
+  text-align:left!important;
+  text-align-last:left!important;
+  color:#fff!important;
+}
+#setupModal #setupAi option,
+#setupModal #setupCards option{
+  color:#fff!important;
+  background:#101a21!important;
+}
+
+
+/* v119 stop Game length select from clipping */
+#setupModal .setupRow:has(#setupMode){
+  grid-template-columns:minmax(0,1fr) 228px!important;
+}
+#setupModal #setupMode{
+  width:228px!important;
+  min-width:228px!important;
+  max-width:228px!important;
+  font-size:.80rem!important;
+  padding-left:10px!important;
+  padding-right:28px!important;
+  text-overflow:clip!important;
+}
+@media (max-width:380px){
+  #setupModal .setupRow:has(#setupMode){
+    grid-template-columns:1fr!important;
+  }
+  #setupModal #setupMode{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
   }
 }
 
@@ -3205,20 +3929,41 @@ body.tallScreen .trumpBox{
   </div>
 </section>
 
-<div class="modalOverlay" id="setupModal">
-  <div class="modalCard">
-    <div class="modalHead"><strong>Start New Game</strong><button class="closeDrawer" id="closeSetup">×</button></div>
-    <div class="modalBody">
-      <div class="section">
-        <div class="controlRow"><label>AI opponents</label><select id="setupAi"></select></div>
-        <div class="controlRow"><label>Starting cards</label><select id="setupCards"></select></div>
-        <div class="controlRow"><label>Difficulty</label><select id="setupDifficulty"><option>Easy</option><option>Normal</option><option selected>Hard</option><option>Adaptive</option></select></div>
-        <div class="controlRow"><label>Game length</label><select id="setupMode"><option value="down">Short: down to 1</option><option value="downUp" selected>Full: down and back up</option></select></div>
-        <div class="controlRow"><label>Tiebreaker</label><button class="toggle on" id="setupTiebreaker" type="button"></button></div>
-        <p class="smallHelp" id="setupHelp"></p>
+<div class="modalOverlay setupOverlay" id="setupModal">
+  <div class="modalCard setupCard">
+    <div class="modalHead setupHead">
+      <div class="setupTitleBlock">
+        <strong>Start New Game</strong>
+        <span>Choose the table, hand size, and scoring options.</span>
       </div>
+      <button class="closeDrawer setupClose" id="closeSetup">×</button>
     </div>
-    <div class="modalFoot"><button class="ghostBtn" id="cancelSetup">Cancel</button><button class="primaryBtn" id="confirmSetup">Deal</button></div>
+    <div class="modalBody setupBody">
+      <div class="setupSettingsCard">
+        <div class="controlRow setupRow">
+          <div class="setupLabel"><label for="setupAi">AI opponents</label><span>Computer players at the table</span></div>
+          <select id="setupAi"></select>
+        </div>
+        <div class="controlRow setupRow">
+          <div class="setupLabel"><label for="setupCards">Starting cards</label><span>Largest hand before the count drops</span></div>
+          <select id="setupCards"></select>
+        </div>
+        <div class="controlRow setupRow">
+          <div class="setupLabel"><label for="setupDifficulty">Difficulty</label><span>How aggressively the AI bids and plays</span></div>
+          <select id="setupDifficulty"><option>Easy</option><option>Normal</option><option selected>Hard</option><option>Adaptive</option></select>
+        </div>
+        <div class="controlRow setupRow">
+          <div class="setupLabel"><label for="setupMode">Game length</label><span>Shorter game or full down-and-up run</span></div>
+          <select id="setupMode"><option value="down">Short: down only</option><option value="downUp" selected>Full: down & back up</option></select>
+        </div>
+        <div class="controlRow setupRow setupToggleRow">
+          <div class="setupLabel"><label for="setupTiebreaker">Tiebreaker</label><span>Extra round if the final score is tied</span></div>
+          <button class="toggle on setupToggle" id="setupTiebreaker" type="button"></button>
+        </div>
+      </div>
+      <p class="smallHelp setupHelpCard" id="setupHelp"></p>
+    </div>
+    <div class="modalFoot setupFoot"><button class="ghostBtn" id="cancelSetup">Cancel</button><button class="primaryBtn" id="confirmSetup">Deal</button></div>
   </div>
 </div>
 
@@ -3268,7 +4013,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v102';
+const APP_VERSION='v119';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -3456,6 +4201,33 @@ function buildHandSizes(start,mode){const down=[];for(let n=start;n>=1;n--)down.
 function sampleNames(count){const names=shuffle(NICKNAMES.slice());return names.slice(0,count);}
 function playerPos(index){const total=game?game.players.length:6;return (POSITIONS[total]||POSITIONS[6])[index]||'top';}
 function clockwiseNext(i){return (i+1)%game.players.length;}
+function biddingOrder(){
+  if(!game||!game.players||!game.players.length)return [];
+  const order=[];
+  let i=game.leaderIndex;
+  const limit=game.players.length;
+  for(let step=0;step<limit;step++){
+    order.push(i);
+    if(i===game.dealerIndex)break;
+    i=clockwiseNext(i);
+  }
+  return order;
+}
+function nextUnbidBidder(){
+  const order=biddingOrder();
+  for(const i of order){
+    if(game.players[i]&&game.players[i].bid===null)return i;
+  }
+  return null;
+}
+function biddingComplete(){
+  return !!game&&biddingOrder().every(i=>game.players[i]&&game.players[i].bid!==null);
+}
+function syncBidModalToTurn(){
+  if(!els||!els.bidModal)return;
+  const shouldShow=!!game&&game.phase==='bidding'&&nextUnbidBidder()===0;
+  if(!shouldShow)closeModal(els.bidModal);
+}
 function currentPlayer(){return game.players[game.turnIndex];}
 function human(){return game.players[0];}
 function playerLeadPhrase(playerIndex,what='next'){const name=game.players[playerIndex]?.name||'Leader';return name==='You'?`You lead ${what}`:`${name} leads ${what}`;}
@@ -3482,7 +4254,7 @@ function explain(text){if(game){game.lastExplanation=text;}}
 
 function setupOptions(){
   els.setupAi.innerHTML='';for(let i=1;i<=5;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=String(i);if(i===5)opt.selected=true;els.setupAi.appendChild(opt);}  
-  const updateCards=()=>{const ai=Number(els.setupAi.value);const max=maxCardsForPlayers(ai+1);const old=Number(els.setupCards.value)||max;els.setupCards.innerHTML='';for(let i=1;i<=max;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=String(i);if(i===Math.min(old,max))opt.selected=true;els.setupCards.appendChild(opt);}if(!old||old>max)els.setupCards.value=String(max);els.setupHelp.textContent=`With ${ai+1} total players, the maximum starting hand is ${max} cards while leaving one card to reveal trump.`;};
+  const updateCards=()=>{const ai=Number(els.setupAi.value);const max=maxCardsForPlayers(ai+1);const old=Number(els.setupCards.value)||max;els.setupCards.innerHTML='';for(let i=1;i<=max;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=String(i);if(i===Math.min(old,max))opt.selected=true;els.setupCards.appendChild(opt);}if(!old||old>max)els.setupCards.value=String(max);els.setupHelp.textContent='If the game ends in a tie, extra tiebreaker rounds are played until the tie is broken.';};
   els.setupAi.onchange=updateCards;updateCards();
 }
 function openSetup(){setupOptions();openModal(els.setupModal);}
@@ -3590,8 +4362,19 @@ function showSplash(){
 
 function bidPacing(){return {fast:{think:1050,show:1300,ask:550},normal:{think:1650,show:2050,ask:700},slow:{think:2250,show:2700,ask:850}}[settings.animationSpeed]||{think:1650,show:2050,ask:700};}
 function continueBidding(){
-  if(!game||game.phase!=='bidding'||biddingAnimating)return;
+  if(!game||game.phase!=='bidding'||biddingAnimating){syncBidModalToTurn();return;}
+  const next=nextUnbidBidder();
+  if(next===null){
+    syncBidModalToTurn();
+    if(biddingComplete()){
+      setBid(game.dealerIndex,game.players[game.dealerIndex].bid,true);
+    }
+    return;
+  }
+  game.bidTurnIndex=next;
+  syncBidModalToTurn();
   render();
+  syncBidModalToTurn();
   const idx=game.bidTurnIndex;
   const p=game.players[idx];
   const pacing=bidPacing();
@@ -3602,16 +4385,20 @@ function continueBidding(){
     renderSeats();
     aiTimer=setTimeout(()=>{
       biddingAnimating=false;
+      if(!game||game.phase!=='bidding'||nextUnbidBidder()!==0)return;
+      game.bidTurnIndex=0;
       openBidModal();
     },pacing.ask);
     return;
   }
+  closeModal(els.bidModal);
   biddingAnimating=true;
   bidThinkingIndex=idx;
   showBidBubble(idx,'…','thinking');
   renderSeats();
   const bid=aiBid(p);
   aiTimer=setTimeout(()=>{
+    if(!game||game.phase!=='bidding'||game.players[idx].bid!==null){biddingAnimating=false;bidThinkingIndex=null;return;}
     showBidBubble(idx,`Bid ${bid}`,'final');
     aiTimer=setTimeout(()=>{
       hideBidBubble(false);
@@ -3631,6 +4418,11 @@ function positionBidModal(){
   els.bidModal.style.setProperty('--bid-modal-top',`${top}px`);
 }
 function openBidModal(){
+  if(!game||game.phase!=='bidding'||nextUnbidBidder()!==0){
+    closeModal(els.bidModal);
+    return;
+  }
+  game.bidTurnIndex=0;
   positionBidModal();
   const calledSoFar=game.players.reduce((sum,p)=>sum+(p.bid===null?0:p.bid),0);
   els.bidHelp.textContent=`${calledSoFar}/${game.handSize} tricks have been called`;
@@ -3649,8 +4441,9 @@ function openBidModal(){
   setTimeout(()=>select.focus({preventScroll:true}),80);
 }
 function submitHumanBid(bid){
-  if(!game||game.phase!=='bidding')return;
+  if(!game||game.phase!=='bidding'||nextUnbidBidder()!==0)return;
   closeModal(els.bidModal);
+  game.bidTurnIndex=0;
   biddingAnimating=true;
   bidThinkingIndex=null;
   showBidBubble(0,`Bid ${bid}`,'final');
@@ -3663,8 +4456,12 @@ function submitHumanBid(bid){
   },pacing.show);
 }
 function setBid(playerIndex,bid,fromFlow=false){
-  const p=game.players[playerIndex];p.bid=bid;bidFlashIndex=playerIndex;log(`${p.name} bids ${bid}`,`${p.name} predicts ${bid} trick${bid===1?'':'s'}.`);
-  if(playerIndex===game.dealerIndex){
+  if(!game||!game.players[playerIndex])return;
+  const p=game.players[playerIndex];
+  if(p.bid!==null&&p.bid!==bid)return;
+  p.bid=bid;bidFlashIndex=playerIndex;log(`${p.name} bids ${bid}`,`${p.name} predicts ${bid} trick${bid===1?'':'s'}.`);
+  if(biddingComplete()){
+    closeModal(els.bidModal);
     game.phase='trumpLocking';
     game.turnIndex=game.leaderIndex;
     game.trumpLockedRevealed=true;
@@ -3681,7 +4478,8 @@ function setBid(playerIndex,bid,fromFlow=false){
     });
     return;
   }
-  game.bidTurnIndex=clockwiseNext(playerIndex);render();saveGame();setTimeout(()=>{if(bidFlashIndex===playerIndex){bidFlashIndex=null;renderSeats();}},650);continueBidding();
+  game.bidTurnIndex=nextUnbidBidder();
+  render();saveGame();setTimeout(()=>{if(bidFlashIndex===playerIndex){bidFlashIndex=null;renderSeats();}},650);continueBidding();
 }
 function showBidBubble(playerIndex,text,type){
   hideBidBubble(true);
@@ -3812,36 +4610,18 @@ function positionBidBubbleToSeat(el,playerIndex){
   const tableRect=els.table.getBoundingClientRect();
   const pos=playerPos(playerIndex);
   if(!seat){
-    el.classList.add(`bubble-${pos}`);
+    el.classList.add(pos==='top'||pos.includes('High')?'bubble-top':'bubble-bottom');
     return;
   }
   const r=seat.getBoundingClientRect();
-  const gap=9;
-  let left=r.left-tableRect.left+r.width/2;
-  let top=r.top-tableRect.top+r.height/2;
-  let transform='translate(-50%,-50%)';
-  let anchor='bottom';
-  if(pos==='bottom'){
-    left=r.left-tableRect.left+r.width/2;
-    top=r.top-tableRect.top-gap;
-    transform='translate(-50%,-100%)';
-    anchor='bottom';
-  }else if(pos==='top'){
-    left=r.left-tableRect.left+r.width/2;
-    top=r.bottom-tableRect.top+gap;
-    transform='translate(-50%,0)';
-    anchor='top';
-  }else if(pos.includes('left')){
-    left=r.right-tableRect.left+gap;
-    top=r.top-tableRect.top+r.height/2;
-    transform='translate(0,-50%)';
-    anchor='left';
-  }else if(pos.includes('right')){
-    left=r.left-tableRect.left-gap;
-    top=r.top-tableRect.top+r.height/2;
-    transform='translate(-100%,-50%)';
-    anchor='right';
-  }
+  const gap=8;
+  const left=r.left-tableRect.left+r.width/2;
+  const seatCenterY=r.top+r.height/2;
+  const tableCenterY=tableRect.top+tableRect.height/2;
+  const isUpper=seatCenterY<tableCenterY;
+  const top=isUpper ? r.bottom-tableRect.top+gap : r.top-tableRect.top-gap;
+  const transform=isUpper ? 'translate(-50%,0)' : 'translate(-50%,-100%)';
+  const anchor=isUpper ? 'top' : 'bottom';
   el.classList.add('dynamic',`anchor-${anchor}`);
   el.style.setProperty('--bubble-left',`${left}px`);
   el.style.setProperty('--bubble-top',`${top}px`);
@@ -4048,6 +4828,7 @@ async function animateTrickCountAward(playerIndex,oldCount,newCount){
   const seat=seatElForPlayer(playerIndex);
   if(!statEl||!countEl||!seat){game.players[playerIndex].tricks=newCount;return;}
 
+  seat.classList.add('trickAwardActive');
   const statRect=statEl.getBoundingClientRect();
   const seatRect=seat.getBoundingClientRect();
   const clone=statEl.cloneNode(true);
@@ -4111,8 +4892,44 @@ async function animateTrickCountAward(playerIndex,oldCount,newCount){
     await clone.animate([{opacity:1},{opacity:0}],{duration:70,easing:'linear',fill:'forwards'}).finished.catch(()=>{});
   }finally{
     clone.remove();
+
+    // Use visible clones for the return animation while the real player-card details
+    // stay hidden underneath. At the final frame, reveal the real details under an
+    // identical clone, then remove the clone. This avoids the end flicker.
+    const returnNodes=[seat.querySelector('.seatName'),rowEl||seat.querySelector('.seatRows')].filter(Boolean);
+    const ghosts=returnNodes.map(node=>{
+      const r=node.getBoundingClientRect();
+      const ghost=node.cloneNode(true);
+      ghost.classList.remove('trickStatRowHidden');
+      ghost.classList.add('trickReturnGhost');
+      ghost.style.left=`${r.left}px`;
+      ghost.style.top=`${r.top}px`;
+      ghost.style.width=`${Math.max(1,r.width)}px`;
+      ghost.style.height=`${Math.max(1,r.height)}px`;
+      document.body.appendChild(ghost);
+      return ghost;
+    });
+
+    await Promise.all(ghosts.map((ghost,i)=>{
+      const anim=ghost.animate([
+        {opacity:0,transform:'translate3d(0,8px,0) scale(.78)'},
+        {opacity:1,transform:'translate3d(0,-2px,0) scale(1.04)',offset:.68},
+        {opacity:1,transform:'translate3d(0,0,0) scale(1)'}
+      ],{
+        duration:(i?420:380)*animationScale(),
+        delay:i?45*animationScale():0,
+        easing:'cubic-bezier(.16,.82,.18,1)',
+        fill:'forwards'
+      });
+      return anim.finished.catch(()=>{});
+    }));
+
+    seat.classList.remove('trickAwardActive','trickAwardReturnPrepare','trickAwardReturning');
     if(rowEl)rowEl.classList.remove('trickStatRowHidden');
     statEl.classList.remove('trickStatHidden');
+
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    ghosts.forEach(ghost=>ghost.remove());
   }
 }
 
@@ -4742,7 +5559,7 @@ window.updateLockedLayout=function updateLockedLayout(){}
 function updateLowerAnchors(){}
 
 function render(winningIndex=null){
-  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();{const canContinue=hasSave();els.continueBtn.disabled=!canContinue;els.continueBtn.classList.toggle('continueUnavailable',!canContinue);}requestAnimationFrame(()=>{updateLowerAnchors();updateTurnRacerOverlay();});
+  renderSeats();renderTopInfo();renderTrick(winningIndex);renderTrump();renderHand();renderDrawerPages();syncBidModalToTurn();{const canContinue=hasSave();els.continueBtn.disabled=!canContinue;els.continueBtn.classList.toggle('continueUnavailable',!canContinue);}requestAnimationFrame(()=>{updateLowerAnchors();updateTurnRacerOverlay();});
 }
 function renderSeats(){
   [...els.table.querySelectorAll('.seat')].forEach(n=>n.remove());
@@ -4798,11 +5615,25 @@ function triggerTrumpStatusFlash(status){
   });
 }
 function renderTrump(){
-  if(!game||!game.trumpCard){els.trumpBox.innerHTML='';return;}
+  if(!game||!game.trumpCard){
+    els.trumpBox.dataset.trumpRenderKey='';
+    els.trumpBox.innerHTML='';
+    return;
+  }
   const playableState=game.phase!=='bidding';
   const lockedShown=playableState&&(game.trumpLockedRevealed!==false);
   const state=game.trumpBroken?'broken':lockedShown?'locked':'pending';
   const flash=trumpFlashStatus&&(trumpFlashStatus===state||trumpFlashStatus==='locked'&&state==='locked'||trumpFlashStatus==='broken'&&state==='broken')?trumpFlashStatus:null;
+  const renderKey=`${game.trumpCard.id}|${state}|${flash||'none'}`;
+
+  // Do not rebuild the trump DOM when nothing about it changed. Rebuilding it while
+  // flash-broken is active restarts the CSS animation every time the game renders
+  // during card movement, which made BROKEN appear to fire multiple times.
+  if(els.trumpBox.dataset.trumpRenderKey===renderKey&&els.trumpBox.querySelector('.trumpPanel')){
+    return;
+  }
+  els.trumpBox.dataset.trumpRenderKey=renderKey;
+
   const pill=flash?`<div class="trumpStatus flash ${flash}">${flash}</div>`:'';
   els.trumpBox.innerHTML=`<div class="trumpPanel ${state} ${flash?`flash-${flash}`:''}" role="button" tabindex="0" aria-label="Trump status"><div class="trumpTitle">TRUMP</div><div class="trumpCardWrap">${cardHTML(game.trumpCard)}</div>${pill}</div>`;
   const panel=els.trumpBox.querySelector('.trumpPanel');
