@@ -2603,6 +2603,553 @@ body.tallScreen .table::after{
   pointer-events:none!important;
 }
 
+
+/* v94 modal/drawer layering + chevron/trump cleanup */
+
+/* The drawer/menu must sit above the bid modal. */
+.drawer{
+  z-index:9800!important;
+}
+.drawerTab{
+  top:calc(55dvh - 32px)!important;
+  z-index:9801!important;
+}
+#bidModal.modalOverlay{
+  z-index:7600!important;
+}
+
+/* Restore the trump panel to the intended vertical look:
+   title at top, card centered below, no side-by-side label/card layout. */
+.trumpPanel{
+  display:grid!important;
+  grid-template-rows:auto auto!important;
+  grid-auto-flow:row!important;
+  place-items:center!important;
+  justify-content:center!important;
+  align-items:center!important;
+  width:82px!important;
+  min-height:104px!important;
+  padding:6px 6px 7px!important;
+  gap:5px!important;
+  border-radius:14px!important;
+  text-align:center!important;
+}
+.trumpTitle{
+  position:static!important;
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  font-size:.54rem!important;
+  line-height:1!important;
+  letter-spacing:.14em!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:nowrap!important;
+}
+.trumpPanel .trumpCardWrap{
+  --cw:42px!important;
+  --ch:58px!important;
+  position:relative!important;
+  display:block!important;
+  margin:0 auto!important;
+  transform:none!important;
+}
+.trumpPanel .card{
+  margin:0 auto!important;
+}
+.trumpStatus{
+  position:absolute!important;
+  left:50%!important;
+  top:-10px!important;
+  transform:translateX(-50%)!important;
+}
+
+
+/* v95 chevron and trump title correction */
+
+/* Move chevron higher than v94. */
+.drawerTab{
+  top:calc(47dvh - 32px)!important;
+}
+
+/* Restore TRUMP label styling from the earlier look: bold gold, centered above the card. */
+.trumpTitle{
+  color:var(--gold)!important;
+  font-weight:1000!important;
+  text-transform:uppercase!important;
+  letter-spacing:.17em!important;
+  font-size:.54rem!important;
+  line-height:1!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.55)!important;
+}
+
+/* Keep the compact vertical trump layout from v94. */
+.trumpPanel{
+  display:grid!important;
+  grid-template-rows:auto auto!important;
+  place-items:center!important;
+  text-align:center!important;
+}
+.trumpPanel .trumpCardWrap{
+  margin:0 auto!important;
+  transform:none!important;
+}
+
+
+/* v96 tighten trump title/card spacing */
+.trumpPanel{
+  grid-template-rows:min-content min-content!important;
+  align-content:center!important;
+  justify-items:center!important;
+  row-gap:2px!important;
+  gap:2px!important;
+  padding-top:6px!important;
+  padding-bottom:6px!important;
+}
+.trumpTitle{
+  margin:0 0 -1px 0!important;
+  padding:0!important;
+}
+.trumpPanel .trumpCardWrap{
+  margin-top:0!important;
+}
+
+
+/* v97 trump spacing + larger player cards */
+
+/* Give TRUMP a small, intentional gap from the card. */
+.trumpPanel{
+  grid-template-rows:min-content min-content!important;
+  align-content:center!important;
+  justify-items:center!important;
+  row-gap:5px!important;
+  gap:5px!important;
+  padding-top:6px!important;
+  padding-bottom:7px!important;
+}
+.trumpTitle{
+  margin:0!important;
+  padding:0!important;
+}
+.trumpPanel .trumpCardWrap{
+  margin-top:0!important;
+}
+
+/* Enlarge player cards while keeping them inside the same percentage frame. */
+.seat{
+  width:33.5%!important;
+  min-height:8.8%!important;
+  padding:6px!important;
+  gap:4px!important;
+}
+.seatName{
+  font-size:clamp(.72rem,2.9vw,.98rem)!important;
+}
+.seatStat{
+  font-size:clamp(.55rem,2.15vw,.74rem)!important;
+  padding:4px 4px!important;
+  border-radius:9px!important;
+}
+.seatRows{
+  gap:4px!important;
+}
+.pill{
+  font-size:.58rem!important;
+}
+
+/* Re-space the enlarged seats so they do not crowd the play area. */
+.pos-top{
+  top:1.2%!important;
+}
+.pos-bottom{
+  bottom:1.2%!important;
+}
+.pos-leftHigh,
+.pos-rightHigh,
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:20.2%!important;
+}
+.pos-leftLow,
+.pos-rightLow,
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:72.8%!important;
+}
+
+
+/* v98 tighter trump box + larger player cards */
+
+/* Shrink the empty padding around the trump card without changing the card much. */
+.trumpPanel{
+  width:64px!important;
+  min-height:78px!important;
+  padding:4px 4px 5px!important;
+  row-gap:4px!important;
+  gap:4px!important;
+  border-radius:12px!important;
+}
+.trumpTitle{
+  font-size:.50rem!important;
+  letter-spacing:.15em!important;
+  line-height:1!important;
+}
+.trumpPanel .trumpCardWrap{
+  --cw:41px!important;
+  --ch:57px!important;
+}
+
+/* Make all player cards bigger now that the percentage layout gives us room. */
+.seat{
+  width:36.5%!important;
+  min-height:9.7%!important;
+  padding:7px!important;
+  gap:4px!important;
+  border-radius:14px!important;
+}
+.seatName{
+  font-size:clamp(.78rem,3.2vw,1.05rem)!important;
+}
+.seatStat{
+  font-size:clamp(.60rem,2.35vw,.80rem)!important;
+  padding:4px 5px!important;
+  border-radius:10px!important;
+}
+.seatRows{
+  gap:5px!important;
+}
+.pill{
+  font-size:.60rem!important;
+  padding:1px 6px!important;
+}
+
+/* Rebalance the larger side seats so they still clear the center play area. */
+.pos-leftHigh,
+.pos-rightHigh,
+body.pwaMode .pos-leftHigh,
+body.pwaMode .pos-rightHigh,
+body.tallScreen .pos-leftHigh,
+body.tallScreen .pos-rightHigh{
+  top:18.6%!important;
+}
+.pos-leftLow,
+.pos-rightLow,
+body.pwaMode .pos-leftLow,
+body.pwaMode .pos-rightLow,
+body.tallScreen .pos-leftLow,
+body.tallScreen .pos-rightLow{
+  top:74.6%!important;
+}
+
+
+/* v99 larger top info + compact/enlarged trump + bottom pill animation */
+
+/* Make the info/buttons above the play area easier to read without overlapping. */
+.topInfo,
+body.pwaMode .topInfo,
+body.tallScreen .topInfo{
+  transform:scale(1)!important;
+  transform-origin:center top!important;
+  margin:0!important;
+  gap:5px!important;
+}
+.topInfo .scoreToggleBtn,
+body.pwaMode .topInfo .scoreToggleBtn,
+body.tallScreen .topInfo .scoreToggleBtn{
+  min-height:27px!important;
+  padding:4px 14px!important;
+  font-size:.66rem!important;
+}
+.topInfo .infoChip,
+body.pwaMode .topInfo .infoChip,
+body.tallScreen .topInfo .infoChip{
+  padding:4px 9px!important;
+  font-size:.66rem!important;
+}
+.roundInfoLine{
+  gap:5px!important;
+}
+
+/* Normal trump box: bigger card, much tighter padding. */
+.trumpPanel{
+  display:grid!important;
+  grid-template-rows:min-content min-content 0px!important;
+  align-content:center!important;
+  justify-items:center!important;
+  width:72px!important;
+  min-height:88px!important;
+  padding:4px 4px 5px!important;
+  row-gap:4px!important;
+  gap:4px!important;
+  border-radius:12px!important;
+  overflow:hidden!important;
+  transition:min-height 220ms ease, padding-bottom 220ms ease, border-color 220ms ease, box-shadow 220ms ease!important;
+}
+.trumpTitle{
+  color:var(--gold)!important;
+  font-weight:1000!important;
+  text-transform:uppercase!important;
+  letter-spacing:.14em!important;
+  font-size:.51rem!important;
+  line-height:1!important;
+  margin:0!important;
+  padding:0!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.55)!important;
+}
+.trumpPanel .trumpCardWrap{
+  --cw:46px!important;
+  --ch:64px!important;
+  margin:0 auto!important;
+  transform:none!important;
+}
+
+/* The LOCKED/BROKEN pill belongs at the bottom. Do not let it float at the top. */
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  position:static!important;
+  left:auto!important;
+  top:auto!important;
+  transform:none!important;
+  order:3!important;
+  display:grid!important;
+  place-items:center!important;
+  min-width:54px!important;
+  height:15px!important;
+  padding:1px 7px!important;
+  margin:0!important;
+  border-radius:999px!important;
+  font-size:.47rem!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  opacity:0;
+}
+
+/* While the pill is visible, grow the trump box at the bottom only. */
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  grid-template-rows:min-content min-content 15px!important;
+  min-height:108px!important;
+  padding-bottom:7px!important;
+  row-gap:5px!important;
+  animation:trumpPanelGrowForPill 1800ms cubic-bezier(.18,.78,.22,1) both!important;
+}
+.trumpStatus.flash{
+  animation:trumpStatusBottomPop 1800ms cubic-bezier(.18,.78,.22,1) both!important;
+}
+.trumpStatus.flash.locked{
+  color:#171100!important;
+  background:rgba(240,202,104,.96)!important;
+  border:1px solid rgba(255,255,255,.45)!important;
+}
+.trumpStatus.flash.broken{
+  color:#061a0d!important;
+  background:rgba(71,226,126,.94)!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+}
+@keyframes trumpPanelGrowForPill{
+  0%{
+    min-height:88px;
+    padding-bottom:5px;
+  }
+  18%{
+    min-height:108px;
+    padding-bottom:7px;
+  }
+  78%{
+    min-height:108px;
+    padding-bottom:7px;
+  }
+  100%{
+    min-height:88px;
+    padding-bottom:5px;
+  }
+}
+@keyframes trumpStatusBottomPop{
+  0%{opacity:0;transform:translateY(-3px) scale(.92);filter:blur(1px);}
+  18%{opacity:1;transform:translateY(0) scale(1.04);filter:blur(0);}
+  72%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(4px) scale(.96);}
+}
+
+
+/* v100 separate trump from play-area grid
+   Trump no longer consumes/shrinks the play area. It is anchored below the play area,
+   aligned with the top of the lower AI player cards. */
+
+/* The center stack is now info + play area only. */
+.centerArea,
+body.pwaMode .centerArea,
+body.tallScreen .centerArea,
+body.tallScreen:not(.pwaMode) .centerArea,
+body.compactHeight .centerArea{
+  top:23.4%!important;
+  height:44.8%!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  overflow:visible!important;
+}
+
+/* Trump is absolutely positioned below the play area, so enlarging it does not shrink the play area. */
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  position:absolute!important;
+  left:50%!important;
+  top:calc(100% + 2px)!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  width:max-content!important;
+  z-index:4!important;
+  pointer-events:auto!important;
+}
+
+/* Keep the larger trump card from v99, but prevent it from affecting trickRing size. */
+.trumpPanel{
+  width:72px!important;
+  min-height:88px!important;
+  padding:4px 4px 5px!important;
+  grid-template-rows:min-content min-content 0px!important;
+  align-content:center!important;
+  justify-items:center!important;
+  row-gap:4px!important;
+  gap:4px!important;
+}
+
+/* During LOCKED/BROKEN, grow downward only. Since the box is absolute, play area stays unchanged. */
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  grid-template-rows:min-content min-content 15px!important;
+  min-height:108px!important;
+  padding-bottom:7px!important;
+}
+
+
+/* v101 lower trump box without changing play-area size */
+.trumpBox,
+body.pwaMode .trumpBox,
+body.tallScreen .trumpBox{
+  top:calc(100% + 13px)!important;
+}
+
+
+/* v102 completely smooth trump LOCKED/BROKEN animation
+   No flashing filters, no min-height jumps, no top-floating pill. The panel reveals
+   the bottom pill by animating max-height, then returns exactly to normal size. */
+
+.trumpPanel{
+  height:auto!important;
+  min-height:88px!important;
+  max-height:88px!important;
+  overflow:hidden!important;
+  transition:border-color 260ms ease, box-shadow 260ms ease!important;
+  will-change:max-height,border-color,box-shadow!important;
+  transform:translateZ(0)!important;
+}
+.trumpPanel.flash-locked,
+.trumpPanel.flash-broken{
+  min-height:88px!important;
+  padding-bottom:5px!important;
+  grid-template-rows:min-content min-content 15px!important;
+  row-gap:4px!important;
+  gap:4px!important;
+}
+.trumpPanel.flash-locked{
+  animation:trumpPanelSmoothLocked var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+.trumpPanel.flash-broken{
+  animation:trumpPanelSmoothBroken var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+.trumpStatus,
+.trumpStatus.flash,
+.trumpStatus.flash.locked,
+.trumpStatus.flash.broken{
+  position:static!important;
+  display:grid!important;
+  place-items:center!important;
+  height:15px!important;
+  min-height:15px!important;
+  max-height:15px!important;
+  padding:1px 7px!important;
+  margin:0!important;
+  opacity:0!important;
+  transform:translateY(-2px) scale(.86,.35)!important;
+  transform-origin:center top!important;
+  filter:none!important;
+  will-change:opacity,transform!important;
+}
+.trumpStatus.flash{
+  animation:trumpPillSmoothInOut var(--trumpFlashMs,1850ms) cubic-bezier(.22,.72,.18,1) both!important;
+}
+@keyframes trumpPanelSmoothLocked{
+  0%{
+    max-height:88px;
+    border-color:rgba(255,255,255,.14);
+    box-shadow:0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  18%{
+    max-height:108px;
+    border-color:rgba(240,202,104,.88);
+    box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  72%{
+    max-height:108px;
+    border-color:rgba(240,202,104,.88);
+    box-shadow:0 0 0 1px rgba(240,202,104,.15),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  100%{
+    max-height:88px;
+    border-color:rgba(240,202,104,.66);
+    box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+}
+@keyframes trumpPanelSmoothBroken{
+  0%{
+    max-height:88px;
+    border-color:rgba(240,202,104,.66);
+    box-shadow:0 0 0 1px rgba(240,202,104,.14),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  18%{
+    max-height:108px;
+    border-color:rgba(71,226,126,.90);
+    box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  72%{
+    max-height:108px;
+    border-color:rgba(71,226,126,.90);
+    box-shadow:0 0 0 1px rgba(71,226,126,.17),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  100%{
+    max-height:88px;
+    border-color:rgba(71,226,126,.72);
+    box-shadow:0 0 0 1px rgba(71,226,126,.16),0 7px 18px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  }
+}
+@keyframes trumpPillSmoothInOut{
+  0%{
+    opacity:0;
+    transform:translateY(-2px) scale(.86,.35);
+  }
+  18%{
+    opacity:1;
+    transform:translateY(0) scale(1,1);
+  }
+  72%{
+    opacity:1;
+    transform:translateY(0) scale(1,1);
+  }
+  100%{
+    opacity:0;
+    transform:translateY(2px) scale(.88,.28);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2721,7 +3268,7 @@ body.tallScreen .table::after{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v93';
+const APP_VERSION='v102';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4236,8 +4783,10 @@ function renderTrick(winningIndex){
 function triggerTrumpStatusFlash(status){
   trumpFlashStatus=status;
   clearTimeout(trumpFlashTimer);
+  const cssDuration=Math.round(1850*animationScale());
+  document.documentElement.style.setProperty('--trumpFlashMs',`${cssDuration}ms`);
   renderTrump();
-  const duration=1900*animationScale();
+  const duration=cssDuration+120;
   return new Promise(resolve=>{
     trumpFlashTimer=setTimeout(()=>{
       if(trumpFlashStatus===status){
