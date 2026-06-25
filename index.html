@@ -4408,6 +4408,27 @@ body.tallScreen .trumpBox{
   box-shadow:0 0 0 1px rgba(11,13,16,.92),0 15px 34px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.18)!important;
 }
 
+
+/* v146 make splash Rules drawer use the same touch-drag drawer behavior */
+.drawer.open{
+  transform:translateX(var(--drawerDrag,0px))!important;
+}
+.drawer.dragging{
+  transition:none!important;
+  touch-action:none!important;
+}
+body.splashShowing .drawer.open .drawerTab,
+body.splashExiting .drawer.open .drawerTab{
+  visibility:visible!important;
+  opacity:1!important;
+  transform:translateX(0)!important;
+  pointer-events:auto!important;
+}
+body.splashShowing .drawer.open .drawerBody,
+body.splashExiting .drawer.open .drawerBody{
+  pointer-events:auto!important;
+}
+
 </style>
 </head>
 <body>
@@ -4546,7 +4567,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v145';
+const APP_VERSION='v146';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -6481,7 +6502,7 @@ function bindEvents(){
   els.closeSetup.onclick=()=>closeModal(els.setupModal);els.cancelSetup.onclick=()=>closeModal(els.setupModal);els.confirmSetup.onclick=startNewGameFromSetup;els.setupTiebreaker.onclick=()=>els.setupTiebreaker.classList.toggle('on');
   els.closeConfirm.onclick=()=>{pendingConfirm=null;closeModal(els.confirmModal);};els.cancelConfirm.onclick=els.closeConfirm.onclick;els.confirmPlayBtn.onclick=()=>{if(pendingConfirm)playHumanCard(pendingConfirm);};
   els.scoreModal.onclick=()=>closeModal(els.scoreModal);if(els.trumpModal)els.trumpModal.onclick=()=>closeModal(els.trumpModal);
-  els.drawerTab.onclick=()=>els.drawer.classList.toggle('open');els.closeDrawer.onclick=closeDrawer;els.drawerNewGame.onclick=()=>{closeDrawer();openSetup();};
+  els.drawerTab.onclick=()=>{if(els.drawer.classList.contains('open'))closeDrawer();else openDrawer();};els.closeDrawer.onclick=closeDrawer;els.drawerNewGame.onclick=()=>{closeDrawer();openSetup();};
   document.addEventListener('click',e=>{const scoreBtn=e.target.closest('[data-show-scores]');if(scoreBtn){showScores();return;}const menu=e.target.closest('[data-page]');if(menu){openPage(menu.dataset.page);return;}if(e.target.closest('[data-back]')){openHome();return;}const tog=e.target.closest('[data-setting-toggle]');if(tog){settings[tog.dataset.settingToggle]=!settings[tog.dataset.settingToggle];saveSettings();render();return;}const felt=e.target.closest('[data-felt]');if(felt){settings.felt=felt.dataset.felt;saveSettings();render();return;}const back=e.target.closest('[data-back]');if(back&&!e.target.closest('[data-back="1"]')){settings.cardBack=back.dataset.back;saveSettings();render();}});
   document.addEventListener('change',e=>{const sel=e.target.closest('[data-setting-select]');if(sel){settings[sel.dataset.settingSelect]=sel.value;saveSettings();render();return;}const color=e.target.closest('[data-setting-color]');if(color){settings[color.dataset.settingColor]=color.value;settings.turnBorderPreset='custom';saveSettings();render();return;}});
 }
