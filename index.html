@@ -4026,6 +4026,71 @@ body.tallScreen .trumpBox{
   display:none!important;
 }
 
+
+/* v133 final stat cleanup + splash text removal */
+.splashCard .logo{
+  margin-bottom:16px!important;
+}
+.splashCard .title,
+.splashCard .tagline{
+  display:none!important;
+}
+#recapModal .modalCard{
+  max-height:calc(100dvh - 28px - var(--safeTop) - var(--safeBottom))!important;
+  min-height:0!important;
+}
+#recapModal .modalBody{
+  min-height:0!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;
+  padding-bottom:18px!important;
+}
+#recapBody{
+  min-height:0!important;
+}
+.finalBidGraphPanel,
+.finalGraphPanel,
+[data-stat-graph]{
+  display:none!important;
+}
+.finalStat.statGraphToggle,
+.finalStat.avgBidToggle{
+  cursor:default!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+.finalStat .statChevron{
+  display:none!important;
+}
+
+
+/* v134 hide closed drawer body on wide screens + splash version shortcut */
+.drawer:not(.open) .drawerBody{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+.drawer.open .drawerBody{
+  visibility:visible!important;
+  opacity:1!important;
+}
+.splashVersionBadge{
+  position:absolute!important;
+  left:50%!important;
+  bottom:calc(12px + var(--safeBottom))!important;
+  transform:translateX(-50%) translateY(8px)!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  transition:opacity 160ms ease,transform 160ms ease!important;
+  z-index:9100!important;
+}
+.splashVersionBadge.show{
+  opacity:1!important;
+  transform:translateX(-50%) translateY(0)!important;
+}
+
 </style>
 </head>
 <body>
@@ -4056,7 +4121,7 @@ body.tallScreen .trumpBox{
         <button class="menuBtn" data-page="trainer">Hint / Trainer <small>Advice + explanation</small></button>
         <button class="menuBtn" data-page="log">Log / History <small>Turns and hands</small></button>
         <button class="menuBtn" data-page="settings">Settings <small>Safe mid-game changes</small></button>
-        <button class="menuBtn" data-page="appearance">Appearance <small>Felt and card backs</small></button>
+        <button class="menuBtn" data-page="appearance">Appearance <small>Felt and turn border</small></button>
         <button class="menuBtn" id="drawerNewGame">New Game <small>Return to setup</small></button>
         <div class="drawerVersionBadge" id="drawerVersionBadge" aria-label="App version"></div>
       </div>
@@ -4072,8 +4137,6 @@ body.tallScreen .trumpBox{
 <section class="splash" id="splash">
   <div class="splashCard">
     <div class="logo"><img class="splashIcon" src="icons/icon-512.png" alt="What the Heck app icon" /></div>
-    <h1 class="title">What the Heck</h1>
-    <p class="tagline">Bid your tricks. Follow suit. Fear the trump.</p>
     <div class="splashActions">
       <button class="primaryBtn" id="startBtn">Start New Game</button>
       <button class="ghostBtn" id="continueBtn">Continue Game</button>
@@ -4166,7 +4229,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v132';
+const APP_VERSION='v134';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4196,6 +4259,7 @@ let trumpFlashTimer=null;
 let cardMotionActive=false;
 let cardMotionCardId=null;
 let turnRacerEl=null;
+let splashVersionTimer=null;
 
 const els={
   app:document.getElementById('app'),centerArea:document.querySelector('.centerArea'),
@@ -4324,11 +4388,11 @@ function finalStatsHTML(p){
       <div class="finalStat good"><span>Hit Bid</span><b>${s.bidHits}</b></div>
       <div class="finalStat warn"><span>Missed</span><b>${s.bidMisses}</b></div>
       <div class="finalStat info"><span>Exact Rate</span><b>${exactRate}</b></div>
-      ${graphStatHTML('','Trump Dealt',s.trumpDealt,'Trump cards dealt by hand',s.trumpDealtHistory)}
-      ${graphStatHTML('','Trump Won',s.trumpWon,'Trump tricks won by hand',s.trumpWonHistory)}
-      ${graphStatHTML('','Non-Trump Won',s.nonTrumpWon,'Non-trump tricks won by hand',s.nonTrumpWonHistory)}
-      ${graphStatHTML('','Avg Bid',avgBid,'Bid progression',s.bidHistory)}
-      ${graphStatHTML('','Avg Won',avgWon,'Tricks won by hand',s.wonHistory)}
+      <div class="finalStat"><span>Trump Dealt</span><b>${s.trumpDealt}</b></div>
+      <div class="finalStat"><span>Trump Won</span><b>${s.trumpWon}</b></div>
+      <div class="finalStat"><span>Non-Trump Won</span><b>${s.nonTrumpWon}</b></div>
+      <div class="finalStat"><span>Avg Bid</span><b>${avgBid}</b></div>
+      <div class="finalStat"><span>Avg Won</span><b>${avgWon}</b></div>
       <div class="finalStat"><span>Zero Bids</span><b>${s.zeroBids}</b></div>
     </div>
   `;
@@ -4863,7 +4927,15 @@ async function playCard(playerIndex,cardId){
     const ledSuit=game.currentTrick.length?game.currentTrick[0].card.suit:null;
     game.currentTrick.push({playerIndex,card});
     game.cardCountThisTrick+=1;
-    if(card.suit===game.trumpSuit){showTrumpBang();if(ledSuit&&ledSuit!==game.trumpSuit&&!wasFollowingNeeded&&!game.trumpBroken){game.trumpBroken=true;triggerTrumpStatusFlash('broken');}}
+    if(card.suit===game.trumpSuit){
+      const trumpLed=!ledSuit;
+      const trumpSluffed=ledSuit&&ledSuit!==game.trumpSuit&&!wasFollowingNeeded;
+      if(!game.trumpBroken&&(trumpLed||trumpSluffed)){
+        game.trumpBroken=true;
+        showTrumpBang();
+        triggerTrumpStatusFlash('broken');
+      }
+    }
     log(`${p.name} plays ${cardLabel(card)}`,buildPlayExplanation(playerIndex,card));
     explain(buildPlayExplanation(playerIndex,card));
     game.turnIndex=clockwiseNext(playerIndex);
@@ -5256,17 +5328,7 @@ function showRecap(final){
         card.setAttribute('aria-expanded',expanded?'true':'false');
       });
     });
-    els.recapBody.querySelectorAll('[data-stat-graph-toggle]').forEach(toggle=>{
-      const flip=()=>{
-        const panel=toggle.nextElementSibling&&toggle.nextElementSibling.matches('[data-stat-graph]')?toggle.nextElementSibling:null;
-        if(!panel)return;
-        const open=panel.classList.toggle('open');
-        toggle.classList.toggle('open',open);
-        toggle.setAttribute('aria-expanded',open?'true':'false');
-      };
-      toggle.addEventListener('click',e=>{e.stopPropagation();flip();});
-      toggle.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();flip();}});
-    });
+
     els.nextHandBtn.textContent='Back to Home';
     els.nextHandBtn.onclick=()=>{closeModal(els.recapModal);showSplash();};
     openModal(els.recapModal);
@@ -5995,8 +6057,34 @@ function setupDrawerDrag(){
   els.drawer.addEventListener('pointercancel',end);
 }
 
+
+function revealSplashVersion(){
+  if(!els.splash||els.splash.classList.contains('hidden')||!document.body.classList.contains('splashShowing'))return;
+  let badge=document.getElementById('splashVersionBadge');
+  if(!badge){
+    badge=document.createElement('div');
+    badge.id='splashVersionBadge';
+    badge.className='drawerVersionBadge splashVersionBadge';
+    badge.setAttribute('aria-label','App version');
+    badge.innerHTML=`<strong>${APP_VERSION}</strong>`;
+    els.splash.appendChild(badge);
+  }else{
+    badge.innerHTML=`<strong>${APP_VERSION}</strong>`;
+  }
+  badge.classList.remove('show');
+  void badge.offsetWidth;
+  badge.classList.add('show');
+  clearTimeout(splashVersionTimer);
+  splashVersionTimer=setTimeout(()=>badge.classList.remove('show'),3200);
+}
+
 function bindEvents(){
   setupDrawerDrag();
+  document.addEventListener('keydown',e=>{
+    if((e.key||'').toLowerCase()==='v'&&document.body.classList.contains('splashShowing')){
+      revealSplashVersion();
+    }
+  });
   updateLockedLayout();
   window.addEventListener('resize',()=>{updateLockedLayout();if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();});
   window.addEventListener('orientationchange',()=>setTimeout(()=>{updateLockedLayout();if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();},120));
