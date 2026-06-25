@@ -3998,6 +3998,27 @@ body.tallScreen .trumpBox{
   letter-spacing:0!important;
 }
 
+
+/* v128 keep Game Menu above every in-game layer */
+.drawer,
+.drawer.open{
+  z-index:999900!important;
+}
+.drawerBody{
+  position:relative!important;
+  z-index:999901!important;
+}
+.drawerTab{
+  z-index:999902!important;
+}
+.drawerContent,
+.drawerHead,
+.drawerHome,
+.subpage{
+  position:relative!important;
+  z-index:999903!important;
+}
+
 </style>
 </head>
 <body>
@@ -4138,7 +4159,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v127';
+const APP_VERSION='v129';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -5878,9 +5899,9 @@ function buildHint(){
   return `Watch bid status. Once someone exceeds their bid, they should try to win as many tricks as possible because the exact-bid bonus is already gone.`;
 }
 function renderLog(){const entries=game&&game.log.length?game.log.map(e=>`<div class="logEntry"><strong>${escapeHtml(e.title)}</strong><p>${escapeHtml(e.body)}</p><p class="smallHelp">${escapeHtml(e.at)}</p></div>`).join(''):'<div class="section"><p>No log entries yet.</p></div>';els.pages.log.innerHTML=pageShell('Log / History',entries);}
-function renderSettings(){els.pages.settings.innerHTML=pageShell('Settings',`<div class="section"><h3>Gameplay</h3><div class="controlRow"><label>Confirm card plays</label><button class="toggle ${settings.confirmPlay?'on':''}" data-setting-toggle="confirmPlay"></button></div><div class="controlRow"><label>Queue next card</label><button class="toggle ${settings.queue?'on':''}" data-setting-toggle="queue"></button></div><div class="controlRow"><label>Animation speed</label><select data-setting-select="animationSpeed"><option value="fast" ${settings.animationSpeed==='fast'?'selected':''}>Fast</option><option value="normal" ${settings.animationSpeed==='normal'?'selected':''}>Normal</option><option value="slow" ${settings.animationSpeed==='slow'?'selected':''}>Slow</option></select></div><p class="smallHelp">New-game-only options like AI count, starting cards, difficulty, and game length stay on the setup screen.</p></div><div class="section"><h3>Turn Border</h3><div class="controlRow"><label>Indicator style</label><select data-setting-select="turnBorderStyle"><option value="none" ${settings.turnBorderStyle==='none'?'selected':''}>None</option><option value="static" ${settings.turnBorderStyle==='static'?'selected':''}>Static border</option><option value="racer" ${settings.turnBorderStyle==='racer'?'selected':''}>Border racer</option><option value="rainbow" ${settings.turnBorderStyle==='rainbow'?'selected':''}>Rainbow racer</option></select></div><div class="controlRow"><label>Border color</label><select data-setting-select="turnBorderPreset"><option value="none" ${settings.turnBorderPreset==='none'?'selected':''}>None</option><option value="gold" ${settings.turnBorderPreset==='gold'?'selected':''}>Gold</option><option value="blue" ${settings.turnBorderPreset==='blue'?'selected':''}>Blue</option><option value="green" ${settings.turnBorderPreset==='green'?'selected':''}>Green</option><option value="red" ${settings.turnBorderPreset==='red'?'selected':''}>Red</option><option value="purple" ${settings.turnBorderPreset==='purple'?'selected':''}>Purple</option><option value="white" ${settings.turnBorderPreset==='white'?'selected':''}>White</option><option value="custom" ${settings.turnBorderPreset==='custom'?'selected':''}>Custom</option></select></div><div class="controlRow turnBorderColorRow"><label>Custom color</label><input type="color" data-setting-color="turnBorderColor" value="${escapeHtml(settings.turnBorderColor||'#f0ca68')}"></div></div>`);}
+function renderSettings(){els.pages.settings.innerHTML=pageShell('Settings',`<div class="section"><h3>Gameplay</h3><div class="controlRow"><label>Confirm card plays</label><button class="toggle ${settings.confirmPlay?'on':''}" data-setting-toggle="confirmPlay"></button></div><div class="controlRow"><label>Queue next card</label><button class="toggle ${settings.queue?'on':''}" data-setting-toggle="queue"></button></div><div class="controlRow"><label>Animation speed</label><select data-setting-select="animationSpeed"><option value="fast" ${settings.animationSpeed==='fast'?'selected':''}>Fast</option><option value="normal" ${settings.animationSpeed==='normal'?'selected':''}>Normal</option><option value="slow" ${settings.animationSpeed==='slow'?'selected':''}>Slow</option></select></div><p class="smallHelp">New-game-only options like AI count, starting cards, difficulty, and game length stay on the setup screen.</p></div>`);}
 
-function renderAppearance(){els.pages.appearance.innerHTML=pageShell('Appearance',`<div class="section"><h3>Table Felt</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.felt==='green'?'active':''}" data-felt="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.felt==='blue'?'active':''}" data-felt="blue"><span class="colorPill blue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.felt==='purple'?'active':''}" data-felt="purple"><span class="colorPill purple"></span>Purple</button><button class="segBtn appearanceChoice ${settings.felt==='black'?'active':''}" data-felt="black"><span class="colorPill black"></span>Black</button></div></div><div class="section"><h3>Card Backs</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.cardBack==='blue'?'active':''}" data-back="blue"><span class="colorPill cardBlue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.cardBack==='red'?'active':''}" data-back="red"><span class="colorPill red"></span>Red</button><button class="segBtn appearanceChoice ${settings.cardBack==='green'?'active':''}" data-back="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.cardBack==='black'?'active':''}" data-back="black"><span class="colorPill black"></span>Black</button></div></div>`);}
+function renderAppearance(){els.pages.appearance.innerHTML=pageShell('Appearance',`<div class="section"><h3>Table Felt</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.felt==='green'?'active':''}" data-felt="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.felt==='blue'?'active':''}" data-felt="blue"><span class="colorPill blue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.felt==='purple'?'active':''}" data-felt="purple"><span class="colorPill purple"></span>Purple</button><button class="segBtn appearanceChoice ${settings.felt==='black'?'active':''}" data-felt="black"><span class="colorPill black"></span>Black</button></div></div><div class="section"><h3>Turn Border</h3><div class="controlRow"><label>Indicator style</label><select data-setting-select="turnBorderStyle"><option value="none" ${settings.turnBorderStyle==='none'?'selected':''}>None</option><option value="static" ${settings.turnBorderStyle==='static'?'selected':''}>Static border</option><option value="racer" ${settings.turnBorderStyle==='racer'?'selected':''}>Border racer</option><option value="rainbow" ${settings.turnBorderStyle==='rainbow'?'selected':''}>Rainbow racer</option></select></div><div class="controlRow"><label>Border color</label><select data-setting-select="turnBorderPreset"><option value="none" ${settings.turnBorderPreset==='none'?'selected':''}>None</option><option value="gold" ${settings.turnBorderPreset==='gold'?'selected':''}>Gold</option><option value="blue" ${settings.turnBorderPreset==='blue'?'selected':''}>Blue</option><option value="green" ${settings.turnBorderPreset==='green'?'selected':''}>Green</option><option value="red" ${settings.turnBorderPreset==='red'?'selected':''}>Red</option><option value="purple" ${settings.turnBorderPreset==='purple'?'selected':''}>Purple</option><option value="white" ${settings.turnBorderPreset==='white'?'selected':''}>White</option><option value="custom" ${settings.turnBorderPreset==='custom'?'selected':''}>Custom</option></select></div><div class="controlRow turnBorderColorRow"><label>Custom color</label><input type="color" data-setting-color="turnBorderColor" value="${escapeHtml(settings.turnBorderColor||'#f0ca68')}"></div></div>`);}
 
 function openDrawer(page){
   els.drawer.style.setProperty('--drawerDrag','0px');
