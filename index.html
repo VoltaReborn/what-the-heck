@@ -3970,6 +3970,18 @@ body.tallScreen .trumpBox{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 5px 12px rgba(0,0,0,.18)!important;
 }
 
+
+/* v122 keep drawer subpages opening at the top */
+.drawerHome.hidden{
+  display:none!important;
+}
+.drawerContent{
+  scroll-behavior:auto!important;
+}
+.subpage.active{
+  display:block!important;
+}
+
 </style>
 </head>
 <body>
@@ -4110,7 +4122,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v121';
+const APP_VERSION='v122';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -5865,7 +5877,15 @@ function closeDrawer(){
   openHome();
 }
 function openHome(){els.drawerTitle.textContent='Game Menu';els.drawerHome.classList.remove('hidden');Object.values(els.pages).forEach(p=>p.classList.remove('active'));}
-function openPage(page){els.drawerTitle.textContent='Game Menu';els.drawerHome.classList.add('hidden');Object.values(els.pages).forEach(p=>p.classList.remove('active'));els.pages[page].classList.add('active');renderDrawerPages();}
+function openPage(page){
+  els.drawerTitle.textContent='Game Menu';
+  els.drawerHome.classList.add('hidden');
+  Object.values(els.pages).forEach(p=>p.classList.remove('active'));
+  els.pages[page].classList.add('active');
+  renderDrawerPages();
+  const content=els.drawer.querySelector('.drawerContent');
+  if(content)content.scrollTop=0;
+}
 
 
 function setupDrawerDrag(){
