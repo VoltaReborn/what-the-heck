@@ -4091,6 +4091,323 @@ body.tallScreen .trumpBox{
   transform:translateX(-50%) translateY(0)!important;
 }
 
+
+/* v135 restored and polished Trump! animation */
+.trumpBang{
+  position:fixed!important;
+  z-index:9600!important;
+  left:50%!important;
+  top:45%!important;
+  width:168px!important;
+  height:92px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:grid!important;
+  place-items:center!important;
+  transform:translate(-50%,-50%) scale(.62) rotate(-4deg)!important;
+  opacity:0;
+  pointer-events:none!important;
+  animation:trumpBangPop 1.12s cubic-bezier(.17,.86,.18,1) forwards!important;
+}
+.trumpBangText{
+  position:relative;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 19px;
+  border-radius:999px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#fff1a4 0%,#f0ca68 31%,#ef4848 32%,#970707 100%);
+  border:1px solid rgba(255,255,255,.55);
+  color:#fff9df;
+  font-weight:1000;
+  font-size:1.44rem;
+  letter-spacing:.045em;
+  text-shadow:0 2px 4px rgba(0,0,0,.52);
+  box-shadow:0 0 0 4px rgba(240,202,104,.16),0 0 28px rgba(239,72,72,.38),0 18px 40px rgba(0,0,0,.45);
+}
+.trumpBangText::after{
+  content:"";
+  position:absolute;
+  inset:-35% -70%;
+  transform:translateX(-70%) rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+  animation:trumpBangShine .62s ease-out .10s both;
+}
+.trumpBangRing{
+  position:absolute;
+  z-index:1;
+  width:118px;
+  height:54px;
+  border-radius:999px;
+  border:2px solid rgba(240,202,104,.72);
+  box-shadow:0 0 22px rgba(240,202,104,.34),inset 0 0 18px rgba(240,202,104,.18);
+  opacity:0;
+  animation:trumpBangRing 1.05s ease-out forwards;
+}
+.trumpSpark{
+  position:absolute;
+  z-index:0;
+  font-weight:1000;
+  font-size:1rem;
+  color:#fff1a4;
+  text-shadow:0 0 9px rgba(240,202,104,.85),0 2px 5px rgba(0,0,0,.5);
+  opacity:0;
+  animation:trumpSpark 1.02s ease-out forwards;
+}
+.trumpSpark.s1{--tx:-62px;--ty:-38px;left:49%;top:42%;animation-delay:.02s;}
+.trumpSpark.s2{--tx:61px;--ty:-36px;left:51%;top:43%;color:#ffb4b4;animation-delay:.05s;}
+.trumpSpark.s3{--tx:-55px;--ty:37px;left:49%;top:54%;color:#ffb4b4;animation-delay:.08s;}
+.trumpSpark.s4{--tx:62px;--ty:35px;left:51%;top:55%;animation-delay:.11s;}
+@keyframes trumpBangPop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.56) rotate(-9deg);}
+  15%{opacity:1;transform:translate(-50%,-50%) scale(1.13) rotate(3deg);}
+  31%{opacity:1;transform:translate(-50%,-50%) scale(.98) rotate(-2deg);}
+  60%{opacity:1;transform:translate(-50%,-50%) scale(1.02) rotate(0deg);}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.90) rotate(0deg);}
+}
+@keyframes trumpBangRing{
+  0%{opacity:0;transform:scale(.45);}
+  16%{opacity:.95;transform:scale(.78);}
+  100%{opacity:0;transform:scale(1.85);}
+}
+@keyframes trumpSpark{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.35);}
+  16%{opacity:1;}
+  72%{opacity:.92;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1.08) rotate(10deg);}
+  100%{opacity:0;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(.7) rotate(18deg);}
+}
+@keyframes trumpBangShine{
+  0%{transform:translateX(-75%) rotate(18deg);}
+  100%{transform:translateX(75%) rotate(18deg);}
+}
+
+
+/* v136 polished Trump pill + exact trick-count landing */
+.trumpBang{
+  position:fixed!important;
+  z-index:9600!important;
+  left:50%!important;
+  top:45%!important;
+  width:auto!important;
+  height:auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:grid!important;
+  place-items:center!important;
+  transform:translate(-50%,-50%) scale(.72)!important;
+  opacity:0;
+  pointer-events:none!important;
+  animation:trumpPillPop 1.08s cubic-bezier(.17,.86,.18,1) forwards!important;
+}
+.trumpBangText{
+  position:relative!important;
+  z-index:2!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:112px!important;
+  padding:12px 20px!important;
+  border-radius:999px!important;
+  overflow:hidden!important;
+  background:linear-gradient(180deg,#fff0a5 0%,#f0ca68 35%,#bf1e1e 36%,#7e0606 100%)!important;
+  border:1px solid rgba(255,255,255,.58)!important;
+  color:#fff8df!important;
+  font-weight:1000!important;
+  font-size:1.44rem!important;
+  letter-spacing:.045em!important;
+  text-shadow:0 2px 4px rgba(0,0,0,.52)!important;
+  box-shadow:0 0 0 1px rgba(20,5,5,.62),0 0 0 5px rgba(240,202,104,.10),0 0 26px rgba(240,202,104,.25),0 17px 38px rgba(0,0,0,.46)!important;
+}
+.trumpBangText::before{
+  content:""!important;
+  position:absolute!important;
+  inset:-4px!important;
+  border-radius:999px!important;
+  padding:3px!important;
+  background:conic-gradient(from 0deg,#f0ca68,#fff3a5,#d41414,#f0ca68,#fff3a5,#f0ca68)!important;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+  -webkit-mask-composite:xor!important;
+  mask-composite:exclude!important;
+  animation:trumpPillRacer .82s linear infinite!important;
+  opacity:.95!important;
+  pointer-events:none!important;
+}
+.trumpBangText::after{
+  content:""!important;
+  position:absolute!important;
+  inset:-35% -70%!important;
+  transform:translateX(-76%) rotate(18deg)!important;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.68),transparent)!important;
+  animation:trumpPillShine .62s ease-out .10s both!important;
+  pointer-events:none!important;
+}
+.trumpBangRing,
+.trumpSpark{
+  display:none!important;
+}
+@keyframes trumpPillPop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.66);}
+  15%{opacity:1;transform:translate(-50%,-50%) scale(1.10);}
+  31%{opacity:1;transform:translate(-50%,-50%) scale(.98);}
+  64%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.92);}
+}
+@keyframes trumpPillRacer{
+  to{transform:rotate(360deg);}
+}
+@keyframes trumpPillShine{
+  0%{transform:translateX(-76%) rotate(18deg);}
+  100%{transform:translateX(76%) rotate(18deg);}
+}
+.trickStatClone{
+  transform-origin:center center!important;
+}
+
+
+/* v137 Trump pill: true outside border racer, fire-truck red, no inside effects */
+.trumpBang{
+  position:fixed!important;
+  z-index:9600!important;
+  left:50%!important;
+  top:45%!important;
+  width:auto!important;
+  height:auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:grid!important;
+  place-items:center!important;
+  transform:translate(-50%,-50%) scale(.72)!important;
+  opacity:0;
+  overflow:visible!important;
+  pointer-events:none!important;
+  animation:trumpPillPop 1.08s cubic-bezier(.17,.86,.18,1) forwards!important;
+}
+.trumpBang::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:1!important;
+  inset:-5px!important;
+  border-radius:999px!important;
+  padding:3px!important;
+  background:conic-gradient(from 0deg,transparent 0 64%,#37efff 72%,#f2feff 78%,#37efff 84%,transparent 92% 100%)!important;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+  -webkit-mask-composite:xor!important;
+  mask-composite:exclude!important;
+  opacity:.98!important;
+  filter:drop-shadow(0 0 7px rgba(55,239,255,.55))!important;
+  animation:trumpBorderRacer .72s linear infinite!important;
+}
+.trumpBangText{
+  position:relative!important;
+  z-index:2!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:112px!important;
+  padding:12px 20px!important;
+  border-radius:999px!important;
+  overflow:hidden!important;
+  background:linear-gradient(180deg,#ff2a22 0%,#df0600 52%,#9f0000 100%)!important;
+  border:1px solid rgba(255,255,255,.42)!important;
+  color:#fff!important;
+  font-weight:1000!important;
+  font-size:1.44rem!important;
+  letter-spacing:.045em!important;
+  text-shadow:0 2px 4px rgba(0,0,0,.58)!important;
+  box-shadow:0 0 0 1px rgba(45,0,0,.72),0 16px 36px rgba(0,0,0,.46),0 0 22px rgba(223,6,0,.24)!important;
+}
+.trumpBangText::before,
+.trumpBangText::after,
+.trumpBangRing,
+.trumpSpark{
+  display:none!important;
+  content:none!important;
+  animation:none!important;
+}
+@keyframes trumpBorderRacer{
+  to{transform:rotate(360deg);}
+}
+
+
+/* v138 Trump pill racer: tight outline-only runner + non-white text */
+.trumpBang{
+  overflow:visible!important;
+}
+.trumpBang::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:3!important;
+  inset:-2px!important;
+  border-radius:999px!important;
+  padding:2px!important;
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg 292deg,
+      #00d8ff 306deg,
+      #bff8ff 318deg,
+      #00d8ff 330deg,
+      transparent 346deg 360deg
+    )!important;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+  -webkit-mask-composite:xor!important;
+  mask-composite:exclude!important;
+  filter:drop-shadow(0 0 4px rgba(0,216,255,.42))!important;
+  opacity:1!important;
+  animation:trumpOutlineRacer 760ms linear infinite!important;
+  pointer-events:none!important;
+}
+.trumpBangText{
+  background:linear-gradient(180deg,#ff1f17 0%,#e10600 52%,#9b0000 100%)!important;
+  color:#ffe7a6!important;
+  border:1px solid rgba(255,231,166,.38)!important;
+  text-shadow:0 2px 4px rgba(0,0,0,.64),0 0 7px rgba(255,231,166,.20)!important;
+  box-shadow:0 0 0 1px rgba(45,0,0,.76),0 15px 34px rgba(0,0,0,.46),0 0 18px rgba(225,6,0,.22)!important;
+}
+.trumpBangText::before,
+.trumpBangText::after{
+  display:none!important;
+  content:none!important;
+  animation:none!important;
+  background:none!important;
+}
+@keyframes trumpOutlineRacer{
+  to{transform:rotate(360deg);}
+}
+
+
+/* v142 Trump pill: white text again + crisp black border */
+.trumpBang::before,
+.trumpBang::after,
+.trumpBangText::before,
+.trumpBangText::after,
+.trumpBangRing,
+.trumpSpark{
+  display:none!important;
+  content:none!important;
+  animation:none!important;
+  background:none!important;
+  filter:none!important;
+}
+.trumpBangText{
+  background:linear-gradient(180deg,#ff2a22 0%,#e10600 54%,#a50000 100%)!important;
+  color:#ffffff!important;
+  border:1px solid #0b0d10!important;
+  text-shadow:0 2px 4px rgba(0,0,0,.58)!important;
+  box-shadow:0 0 0 1px rgba(11,13,16,.92),0 15px 34px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
 </style>
 </head>
 <body>
@@ -4229,7 +4546,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v134';
+const APP_VERSION='v145';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4297,7 +4614,21 @@ function updateContinueButton(){
   els.continueBtn.classList.toggle('continueUnavailable',!canContinue);
 }
 function loadGame(){try{const data=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(data&&data.players){game=data;normalizeLoadedGame();return true;}}catch(e){}return false;}
-function normalizeLoadedGame(){if(!game||!game.players)return;for(const p of game.players){if(Array.isArray(p.hand))sortHand(p.hand);ensurePlayerStats(p);}}
+function normalizeLoadedGame(){
+  if(!game||!game.players)return;
+  for(const p of game.players){if(Array.isArray(p.hand))sortHand(p.hand);ensurePlayerStats(p);}
+  if(game.phase==='playing'){
+    if(!Array.isArray(game.currentTrick))game.currentTrick=[];
+    if(game.currentTrick.length>=game.players.length){
+      game.queuedCardId=null;
+      return;
+    }
+    const current=game.players[game.turnIndex];
+    if(current&&current.human&&Array.isArray(current.hand)&&current.hand.length===0&&game.currentTrick.length>0){
+      game.turnIndex=clockwiseNext(game.currentTrick[game.currentTrick.length-1].playerIndex);
+    }
+  }
+}
 function clearAiTimer(){if(aiTimer){clearTimeout(aiTimer);aiTimer=null;}biddingAnimating=false;hideBidBubble(true);bidThinkingIndex=null;bidFlashIndex=null;}
 function delayMs(){return settings.animationSpeed==='fast'?320:settings.animationSpeed==='slow'?850:560;}
 function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
@@ -4482,7 +4813,13 @@ function closeModal(el){
   if(els&&el===els.recapModal)document.body.classList.remove('recapModalOpen');
 }
 function showToast(msg){clearTimeout(toastTimer);els.toast.textContent=msg;els.toast.classList.remove('show');void els.toast.offsetWidth;els.toast.classList.add('show');toastTimer=setTimeout(()=>els.toast.classList.remove('show'),2300);}
-function showTrumpBang(){const el=document.createElement('div');el.className='trumpBang';el.textContent='Trump!';document.body.appendChild(el);setTimeout(()=>el.remove(),1050);}
+function showTrumpBang(){
+  const el=document.createElement('div');
+  el.className='trumpBang';
+  el.innerHTML='<span class="trumpBangText">Trump!</span>';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1180);
+}
 function log(title,body){if(!game)return;game.log.unshift({title,body,at:new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})});game.log=game.log.slice(0,120);}
 function explain(text){if(game){game.lastExplanation=text;}}
 
@@ -4894,15 +5231,95 @@ function onHumanCardTap(cardId){
   if(settings.confirmPlay){pendingConfirm=cardId;els.confirmBody.innerHTML=`<p>Play this card?</p><div style="display:grid;place-items:center;margin:12px 0">${cardHTML(card)}</div>`;openModal(els.confirmModal);}else playHumanCard(cardId);
 }
 function playHumanCard(cardId){pendingConfirm=null;closeModal(els.confirmModal);playCard(0,cardId);}
+
+
+async function waitForRoundAnimationsComplete(){
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const finiteAnimations=document.getAnimations().filter(anim=>{
+    const timing=anim.effect&&anim.effect.getTiming?anim.effect.getTiming():null;
+    return timing&&timing.iterations!==Infinity&&(anim.playState==='running'||anim.playState==='pending');
+  });
+  if(finiteAnimations.length){
+    await Promise.allSettled(finiteAnimations.map(anim=>anim.finished));
+  }
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+}
+
+function forceResolveStuckTrick(){
+  if(!game||game.phase!=='playing'||!Array.isArray(game.currentTrick)||!game.currentTrick.length||!Array.isArray(game.players)||!game.players.length)return false;
+  const completeTrick=game.currentTrick.length>=game.players.length;
+  const current=game.players[game.turnIndex];
+  const impossibleHumanTurn=!!(current&&current.human&&Array.isArray(current.hand)&&current.hand.length===0&&game.currentTrick.length>0);
+  if(!completeTrick&&!impossibleHumanTurn)return false;
+
+  cardMotionActive=false;
+  cardMotionCardId=null;
+  clearAiTimer();
+
+  const trick=game.currentTrick.slice(0,game.players.length);
+  if(!trick.length)return false;
+  const winner=determineTrickWinner(trick);
+  const winnerPlayer=game.players[winner.playerIndex];
+  if(!winnerPlayer)return false;
+
+  const oldTricks=Number(winnerPlayer.tricks)||0;
+  winnerPlayer.tricks=oldTricks+1;
+  const winnerStats=ensurePlayerStats(winnerPlayer);
+  winnerStats.tricksWon+=1;
+  if(winner.card.suit===game.trumpSuit){
+    winnerStats.trumpWon+=1;
+    winnerPlayer.handTrumpWon=(winnerPlayer.handTrumpWon||0)+1;
+  }else{
+    winnerStats.nonTrumpWon+=1;
+    winnerPlayer.handNonTrumpWon=(winnerPlayer.handNonTrumpWon||0)+1;
+  }
+
+  const led=trick[0].card.suit;
+  const trumpPlayed=trick.some(t=>t.card.suit===game.trumpSuit);
+  const reason=trumpPlayed?`${winnerPlayer.name} won because ${cardLabel(winner.card)} was the highest trump.`:`${winnerPlayer.name} won because ${cardLabel(winner.card)} was the highest ${SUIT_NAMES[led]} card.`;
+  explain(reason);
+  log(`${winnerPlayer.name} wins the stuck trick`,reason);
+
+  game.currentTrick=[];
+  game.leaderIndex=winner.playerIndex;
+  game.turnIndex=winner.playerIndex;
+  game.cardCountThisTrick=0;
+  game.queuedCardId=null;
+
+  if(game.players.every(p=>p.hand.length===0)){
+    scoreHand();
+  }else{
+    render();
+    saveGame();
+    continuePlay();
+  }
+  return true;
+}
+
 function continuePlay(){
   if(!game||game.phase!=='playing')return;
   render();saveGame();
+  if(Array.isArray(game.currentTrick)&&game.currentTrick.length>=game.players.length){
+    clearAiTimer();
+    aiTimer=setTimeout(()=>resolveTrick(),180);
+    return;
+  }
+  const activePlayer=game.players[game.turnIndex];
+  if(activePlayer&&activePlayer.human&&Array.isArray(activePlayer.hand)&&activePlayer.hand.length===0&&game.currentTrick.length>0){
+    forceResolveStuckTrick();
+    return;
+  }
   const p=currentPlayer();
   if(p.human){
     if(settings.queue&&game.queuedCardId){const queued=game.queuedCardId;game.queuedCardId=null;if(legalCardsFor(0).includes(queued)){const card=human().hand.find(c=>c.id===queued);showToast(`Playing queued ${cardLabel(card)}.`);if(settings.confirmPlay){pendingConfirm=queued;els.confirmBody.innerHTML=`<p>Play queued card?</p><div style="display:grid;place-items:center;margin:12px 0">${cardHTML(card)}</div>`;openModal(els.confirmModal);}else aiTimer=setTimeout(()=>playHumanCard(queued),220);return;}showToast('Queued card is no longer legal. Choose a card.');render();}
     return;
   }
-  aiTimer=setTimeout(()=>{const card=aiChooseCard(game.turnIndex);playCard(game.turnIndex,card.id);},delayMs());
+  aiTimer=setTimeout(()=>{
+    if(!game||game.phase!=='playing')return;
+    if(Array.isArray(game.currentTrick)&&game.currentTrick.length>=game.players.length){resolveTrick();return;}
+    const card=aiChooseCard(game.turnIndex);
+    if(card)playCard(game.turnIndex,card.id);
+  },delayMs());
 }
 async function playCard(playerIndex,cardId){
   if(cardMotionActive)return;
@@ -4928,11 +5345,11 @@ async function playCard(playerIndex,cardId){
     game.currentTrick.push({playerIndex,card});
     game.cardCountThisTrick+=1;
     if(card.suit===game.trumpSuit){
+      showTrumpBang();
       const trumpLed=!ledSuit;
       const trumpSluffed=ledSuit&&ledSuit!==game.trumpSuit&&!wasFollowingNeeded;
       if(!game.trumpBroken&&(trumpLed||trumpSluffed)){
         game.trumpBroken=true;
-        showTrumpBang();
         triggerTrumpStatusFlash('broken');
       }
     }
@@ -5068,7 +5485,6 @@ async function animateTrickCountAward(playerIndex,oldCount,newCount){
   const seat=seatElForPlayer(playerIndex);
   if(!statEl||!countEl||!seat){game.players[playerIndex].tricks=newCount;return;}
 
-  seat.classList.add('trickAwardActive');
   const statRect=statEl.getBoundingClientRect();
   const seatRect=seat.getBoundingClientRect();
   const clone=statEl.cloneNode(true);
@@ -5081,6 +5497,7 @@ async function animateTrickCountAward(playerIndex,oldCount,newCount){
   clone.style.height=`${Math.max(1,statRect.height)}px`;
   document.body.appendChild(clone);
 
+  seat.classList.add('trickAwardActive');
   if(rowEl)rowEl.classList.add('trickStatRowHidden');
   else statEl.classList.add('trickStatHidden');
 
@@ -5096,11 +5513,11 @@ async function animateTrickCountAward(playerIndex,oldCount,newCount){
   try{
     await clone.animate([
       {transform:'translate3d(0,0,0) scale(1)',opacity:1,filter:'brightness(1)'},
-      {transform:`translate3d(${dx*.48}px,${dy*.48}px,0) scale(${1+(grow-1)*.55})`,opacity:1,filter:'brightness(1.06)',offset:.46},
+      {transform:`translate3d(${dx*.50}px,${dy*.50}px,0) scale(${1+(grow-1)*.58})`,opacity:1,filter:'brightness(1.08)',offset:.48},
       {transform:centerTransform,opacity:1,filter:'brightness(1)'}
     ],{duration:330*scale,easing:'cubic-bezier(.20,.82,.22,1)',fill:'forwards'}).finished.catch(()=>{});
 
-    await sleep(75*scale);
+    await sleep(70*scale);
 
     const cloneCount=clone.querySelector('b');
     if(cloneCount){
@@ -5119,57 +5536,26 @@ async function animateTrickCountAward(playerIndex,oldCount,newCount){
       game.players[playerIndex].tricks=newCount;
     }
 
-    await sleep(100*scale);
+    await sleep(95*scale);
 
     await clone.animate([
       {transform:centerTransform,opacity:1,filter:'brightness(1)'},
-      {transform:`translate3d(${dx*.46}px,${dy*.46}px,0) scale(${1+(grow-1)*.42})`,opacity:1,filter:'brightness(1.04)',offset:.52},
+      {transform:`translate3d(${dx*.44}px,${dy*.44}px,0) scale(${1+(grow-1)*.38})`,opacity:1,filter:'brightness(1.04)',offset:.52},
       {transform:'translate3d(0,0,0) scale(1)',opacity:1,filter:'brightness(1)'}
     ],{duration:370*scale,easing:'cubic-bezier(.22,.82,.22,1)',fill:'forwards'}).finished.catch(()=>{});
 
+    // Reveal the real player-card row only after the clone has returned to the exact
+    // same rectangle, with the updated number already in place. This makes the final
+    // frame match the normal player card instead of popping or drifting.
     if(rowEl)rowEl.classList.remove('trickStatRowHidden');
     else statEl.classList.remove('trickStatHidden');
-    await clone.animate([{opacity:1},{opacity:0}],{duration:70,easing:'linear',fill:'forwards'}).finished.catch(()=>{});
+    seat.classList.remove('trickAwardActive');
+    await new Promise(resolve=>requestAnimationFrame(resolve));
   }finally{
     clone.remove();
-
-    // Use visible clones for the return animation while the real player-card details
-    // stay hidden underneath. At the final frame, reveal the real details under an
-    // identical clone, then remove the clone. This avoids the end flicker.
-    const returnNodes=[seat.querySelector('.seatName'),rowEl||seat.querySelector('.seatRows')].filter(Boolean);
-    const ghosts=returnNodes.map(node=>{
-      const r=node.getBoundingClientRect();
-      const ghost=node.cloneNode(true);
-      ghost.classList.remove('trickStatRowHidden');
-      ghost.classList.add('trickReturnGhost');
-      ghost.style.left=`${r.left}px`;
-      ghost.style.top=`${r.top}px`;
-      ghost.style.width=`${Math.max(1,r.width)}px`;
-      ghost.style.height=`${Math.max(1,r.height)}px`;
-      document.body.appendChild(ghost);
-      return ghost;
-    });
-
-    await Promise.all(ghosts.map((ghost,i)=>{
-      const anim=ghost.animate([
-        {opacity:0,transform:'translate3d(0,8px,0) scale(.78)'},
-        {opacity:1,transform:'translate3d(0,-2px,0) scale(1.04)',offset:.68},
-        {opacity:1,transform:'translate3d(0,0,0) scale(1)'}
-      ],{
-        duration:(i?420:380)*animationScale(),
-        delay:i?45*animationScale():0,
-        easing:'cubic-bezier(.16,.82,.18,1)',
-        fill:'forwards'
-      });
-      return anim.finished.catch(()=>{});
-    }));
-
-    seat.classList.remove('trickAwardActive','trickAwardReturnPrepare','trickAwardReturning');
     if(rowEl)rowEl.classList.remove('trickStatRowHidden');
     statEl.classList.remove('trickStatHidden');
-
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    ghosts.forEach(ghost=>ghost.remove());
+    seat.classList.remove('trickAwardActive','trickAwardReturnPrepare','trickAwardReturning');
   }
 }
 
@@ -5205,6 +5591,9 @@ async function resolveTrick(){
   game.turnIndex=winner.playerIndex;
   game.cardCountThisTrick=0;
   if(game.players.every(p=>p.hand.length===0)){
+    render();
+    saveGame();
+    await waitForRoundAnimationsComplete();
     scoreHand();
   }else{
     render();
@@ -6088,7 +6477,7 @@ function bindEvents(){
   updateLockedLayout();
   window.addEventListener('resize',()=>{updateLockedLayout();if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();});
   window.addEventListener('orientationchange',()=>setTimeout(()=>{updateLockedLayout();if(els.bidModal.classList.contains('open'))positionBidModal();fitHandCards();updateLowerAnchors();updateTurnRacerOverlay();},120));
-  els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){render();exitSplash();if(game.phase==='bidding')continueBidding();else if(game.phase==='playing'||game.phase==='trumpLocking'){if(game.phase==='trumpLocking')game.phase='playing';continuePlay();}else if(game.phase==='handOver')showRecap(false);else if(game.phase==='gameOver')showRecap(true);}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
+  els.startBtn.onclick=openSetup;els.continueBtn.onclick=()=>{if(loadGame()){exitSplash();if(game.phase==='bidding'){render();continueBidding();}else if(game.phase==='playing'||game.phase==='trumpLocking'){if(game.phase==='trumpLocking')game.phase='playing';render();continuePlay();}else if(game.phase==='handOver'){render();showRecap(false);}else if(game.phase==='gameOver'){render();showRecap(true);}else render();}};els.splashRulesBtn.onclick=()=>openDrawer('rules');
   els.closeSetup.onclick=()=>closeModal(els.setupModal);els.cancelSetup.onclick=()=>closeModal(els.setupModal);els.confirmSetup.onclick=startNewGameFromSetup;els.setupTiebreaker.onclick=()=>els.setupTiebreaker.classList.toggle('on');
   els.closeConfirm.onclick=()=>{pendingConfirm=null;closeModal(els.confirmModal);};els.cancelConfirm.onclick=els.closeConfirm.onclick;els.confirmPlayBtn.onclick=()=>{if(pendingConfirm)playHumanCard(pendingConfirm);};
   els.scoreModal.onclick=()=>closeModal(els.scoreModal);if(els.trumpModal)els.trumpModal.onclick=()=>closeModal(els.trumpModal);
