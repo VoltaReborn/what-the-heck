@@ -3874,6 +3874,102 @@ body.tallScreen .trumpBox{
   }
 }
 
+
+/* v120 official version badge at bottom of main menu */
+.drawerHome{
+  min-height:100%!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.drawerHome .menuBtn{
+  flex:0 0 auto!important;
+}
+.drawerVersionBadge{
+  margin-top:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding:11px 12px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(240,202,104,.22)!important;
+  background:
+    radial-gradient(circle at 16% 16%,rgba(240,202,104,.18),transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.028))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 20px rgba(0,0,0,.18)!important;
+  color:#dce8ed!important;
+}
+.drawerVersionBadge .versionSeal{
+  width:34px!important;
+  height:34px!important;
+  border-radius:11px!important;
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 auto!important;
+  background:linear-gradient(180deg,rgba(240,202,104,1),rgba(210,161,47,1))!important;
+  color:#171100!important;
+  font-size:.62rem!important;
+  font-weight:1000!important;
+  letter-spacing:-.06em!important;
+  box-shadow:0 6px 14px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.28)!important;
+}
+.drawerVersionBadge span{
+  display:block!important;
+  color:#f5fbff!important;
+  font-size:.73rem!important;
+  font-weight:1000!important;
+  line-height:1.05!important;
+}
+.drawerVersionBadge strong{
+  display:block!important;
+  margin-top:3px!important;
+  width:max-content!important;
+  padding:2px 7px!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.34)!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  color:var(--gold)!important;
+  font-size:.64rem!important;
+  font-weight:1000!important;
+  letter-spacing:.06em!important;
+  line-height:1!important;
+}
+.appVersion{
+  display:none!important;
+}
+
+
+/* v121 version badge: pill only */
+.drawerVersionBadge{
+  margin-top:auto!important;
+  padding:8px 2px 0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+}
+.drawerVersionBadge .versionSeal,
+.drawerVersionBadge span{
+  display:none!important;
+}
+.drawerVersionBadge strong{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:54px!important;
+  padding:4px 10px!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.34)!important;
+  border:1px solid rgba(240,202,104,.28)!important;
+  color:var(--gold)!important;
+  font-size:.68rem!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  line-height:1!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 5px 12px rgba(0,0,0,.18)!important;
+}
+
 </style>
 </head>
 <body>
@@ -3906,6 +4002,7 @@ body.tallScreen .trumpBox{
         <button class="menuBtn" data-page="settings">Settings <small>Safe mid-game changes</small></button>
         <button class="menuBtn" data-page="appearance">Appearance <small>Felt and card backs</small></button>
         <button class="menuBtn" id="drawerNewGame">New Game <small>Return to setup</small></button>
+        <div class="drawerVersionBadge" id="drawerVersionBadge" aria-label="App version"></div>
       </div>
       <section class="subpage" id="page-rules"></section>
       <section class="subpage" id="page-trainer"></section>
@@ -4013,7 +4110,7 @@ body.tallScreen .trumpBox{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v119';
+const APP_VERSION='v121';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4052,7 +4149,7 @@ const els={
   bidModal:document.getElementById('bidModal'),bidGrid:document.getElementById('bidGrid'),bidHelp:document.getElementById('bidHelp'),confirmModal:document.getElementById('confirmModal'),confirmBody:document.getElementById('confirmBody'),closeConfirm:document.getElementById('closeConfirm'),cancelConfirm:document.getElementById('cancelConfirm'),confirmPlayBtn:document.getElementById('confirmPlayBtn'),
   recapModal:document.getElementById('recapModal'),recapTitle:document.getElementById('recapTitle'),recapBody:document.getElementById('recapBody'),nextHandBtn:document.getElementById('nextHandBtn'),
   scoreModal:document.getElementById('scoreModal'),scoreModalBody:document.getElementById('scoreModalBody'),trumpModal:document.getElementById('trumpModal'),trumpModalBody:document.getElementById('trumpModalBody'),
-  drawer:document.getElementById('drawer'),drawerTab:document.getElementById('drawerTab'),closeDrawer:document.getElementById('closeDrawer'),drawerTitle:document.getElementById('drawerTitle'),drawerHome:document.getElementById('drawerHome'),drawerNewGame:document.getElementById('drawerNewGame'),
+  drawer:document.getElementById('drawer'),drawerTab:document.getElementById('drawerTab'),closeDrawer:document.getElementById('closeDrawer'),drawerTitle:document.getElementById('drawerTitle'),drawerHome:document.getElementById('drawerHome'),drawerNewGame:document.getElementById('drawerNewGame'),drawerVersionBadge:document.getElementById('drawerVersionBadge'),
   pages:{rules:document.getElementById('page-rules'),trainer:document.getElementById('page-trainer'),log:document.getElementById('page-log'),settings:document.getElementById('page-settings'),appearance:document.getElementById('page-appearance')},toast:document.getElementById('toast')
 };
 
@@ -5719,7 +5816,12 @@ function renderHand(){
   [...els.handGrid.querySelectorAll('.card')].forEach(el=>{el.addEventListener('click',()=>onHumanCardTap(el.dataset.cardId));});
   requestAnimationFrame(fitHandCards);
 }
-function renderDrawerPages(){renderRules();renderTrainer();renderLog();renderSettings();renderAppearance();}
+function renderDrawerPages(){
+  renderRules();renderTrainer();renderLog();renderSettings();renderAppearance();
+  if(els.drawerVersionBadge){
+    els.drawerVersionBadge.innerHTML=`<strong>${APP_VERSION}</strong>`;
+  }
+}
 function pageShell(title,content){return `<div class="subTop"><button class="backBtn" data-back="1">‹</button><div class="drawerTitle">${title}</div></div>${content}`;}
 
 function renderScoreModal(){
@@ -5748,7 +5850,7 @@ function buildHint(){
   return `Watch bid status. Once someone exceeds their bid, they should try to win as many tricks as possible because the exact-bid bonus is already gone.`;
 }
 function renderLog(){const entries=game&&game.log.length?game.log.map(e=>`<div class="logEntry"><strong>${escapeHtml(e.title)}</strong><p>${escapeHtml(e.body)}</p><p class="smallHelp">${escapeHtml(e.at)}</p></div>`).join(''):'<div class="section"><p>No log entries yet.</p></div>';els.pages.log.innerHTML=pageShell('Log / History',entries);}
-function renderSettings(){els.pages.settings.innerHTML=pageShell('Settings',`<div class="section"><h3>Gameplay</h3><div class="controlRow"><label>Confirm card plays</label><button class="toggle ${settings.confirmPlay?'on':''}" data-setting-toggle="confirmPlay"></button></div><div class="controlRow"><label>Queue next card</label><button class="toggle ${settings.queue?'on':''}" data-setting-toggle="queue"></button></div><div class="controlRow"><label>Animation speed</label><select data-setting-select="animationSpeed"><option value="fast" ${settings.animationSpeed==='fast'?'selected':''}>Fast</option><option value="normal" ${settings.animationSpeed==='normal'?'selected':''}>Normal</option><option value="slow" ${settings.animationSpeed==='slow'?'selected':''}>Slow</option></select></div><p class="smallHelp">New-game-only options like AI count, starting cards, difficulty, and game length stay on the setup screen.</p></div><div class="section"><h3>Turn Border</h3><div class="controlRow"><label>Indicator style</label><select data-setting-select="turnBorderStyle"><option value="none" ${settings.turnBorderStyle==='none'?'selected':''}>None</option><option value="static" ${settings.turnBorderStyle==='static'?'selected':''}>Static border</option><option value="racer" ${settings.turnBorderStyle==='racer'?'selected':''}>Border racer</option><option value="rainbow" ${settings.turnBorderStyle==='rainbow'?'selected':''}>Rainbow racer</option></select></div><div class="controlRow"><label>Border color</label><select data-setting-select="turnBorderPreset"><option value="none" ${settings.turnBorderPreset==='none'?'selected':''}>None</option><option value="gold" ${settings.turnBorderPreset==='gold'?'selected':''}>Gold</option><option value="blue" ${settings.turnBorderPreset==='blue'?'selected':''}>Blue</option><option value="green" ${settings.turnBorderPreset==='green'?'selected':''}>Green</option><option value="red" ${settings.turnBorderPreset==='red'?'selected':''}>Red</option><option value="purple" ${settings.turnBorderPreset==='purple'?'selected':''}>Purple</option><option value="white" ${settings.turnBorderPreset==='white'?'selected':''}>White</option><option value="custom" ${settings.turnBorderPreset==='custom'?'selected':''}>Custom</option></select></div><div class="controlRow turnBorderColorRow"><label>Custom color</label><input type="color" data-setting-color="turnBorderColor" value="${escapeHtml(settings.turnBorderColor||'#f0ca68')}"></div></div><div class=\"appVersion\">App version ${APP_VERSION}</div>`);}
+function renderSettings(){els.pages.settings.innerHTML=pageShell('Settings',`<div class="section"><h3>Gameplay</h3><div class="controlRow"><label>Confirm card plays</label><button class="toggle ${settings.confirmPlay?'on':''}" data-setting-toggle="confirmPlay"></button></div><div class="controlRow"><label>Queue next card</label><button class="toggle ${settings.queue?'on':''}" data-setting-toggle="queue"></button></div><div class="controlRow"><label>Animation speed</label><select data-setting-select="animationSpeed"><option value="fast" ${settings.animationSpeed==='fast'?'selected':''}>Fast</option><option value="normal" ${settings.animationSpeed==='normal'?'selected':''}>Normal</option><option value="slow" ${settings.animationSpeed==='slow'?'selected':''}>Slow</option></select></div><p class="smallHelp">New-game-only options like AI count, starting cards, difficulty, and game length stay on the setup screen.</p></div><div class="section"><h3>Turn Border</h3><div class="controlRow"><label>Indicator style</label><select data-setting-select="turnBorderStyle"><option value="none" ${settings.turnBorderStyle==='none'?'selected':''}>None</option><option value="static" ${settings.turnBorderStyle==='static'?'selected':''}>Static border</option><option value="racer" ${settings.turnBorderStyle==='racer'?'selected':''}>Border racer</option><option value="rainbow" ${settings.turnBorderStyle==='rainbow'?'selected':''}>Rainbow racer</option></select></div><div class="controlRow"><label>Border color</label><select data-setting-select="turnBorderPreset"><option value="none" ${settings.turnBorderPreset==='none'?'selected':''}>None</option><option value="gold" ${settings.turnBorderPreset==='gold'?'selected':''}>Gold</option><option value="blue" ${settings.turnBorderPreset==='blue'?'selected':''}>Blue</option><option value="green" ${settings.turnBorderPreset==='green'?'selected':''}>Green</option><option value="red" ${settings.turnBorderPreset==='red'?'selected':''}>Red</option><option value="purple" ${settings.turnBorderPreset==='purple'?'selected':''}>Purple</option><option value="white" ${settings.turnBorderPreset==='white'?'selected':''}>White</option><option value="custom" ${settings.turnBorderPreset==='custom'?'selected':''}>Custom</option></select></div><div class="controlRow turnBorderColorRow"><label>Custom color</label><input type="color" data-setting-color="turnBorderColor" value="${escapeHtml(settings.turnBorderColor||'#f0ca68')}"></div></div>`);}
 
 function renderAppearance(){els.pages.appearance.innerHTML=pageShell('Appearance',`<div class="section"><h3>Table Felt</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.felt==='green'?'active':''}" data-felt="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.felt==='blue'?'active':''}" data-felt="blue"><span class="colorPill blue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.felt==='purple'?'active':''}" data-felt="purple"><span class="colorPill purple"></span>Purple</button><button class="segBtn appearanceChoice ${settings.felt==='black'?'active':''}" data-felt="black"><span class="colorPill black"></span>Black</button></div></div><div class="section"><h3>Card Backs</h3><div class="segmented"><button class="segBtn appearanceChoice ${settings.cardBack==='blue'?'active':''}" data-back="blue"><span class="colorPill cardBlue"></span>Blue</button><button class="segBtn appearanceChoice ${settings.cardBack==='red'?'active':''}" data-back="red"><span class="colorPill red"></span>Red</button><button class="segBtn appearanceChoice ${settings.cardBack==='green'?'active':''}" data-back="green"><span class="colorPill green"></span>Green</button><button class="segBtn appearanceChoice ${settings.cardBack==='black'?'active':''}" data-back="black"><span class="colorPill black"></span>Black</button></div></div>`);}
 
