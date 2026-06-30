@@ -4567,7 +4567,7 @@ body.splashExiting .drawer.open .drawerBody{
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v148';
+const APP_VERSION='v149';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4816,7 +4816,16 @@ function syncBidModalToTurn(){
 }
 function currentPlayer(){return game.players[game.turnIndex];}
 function human(){return game.players[0];}
-function playerLeadPhrase(playerIndex,what='next'){const name=game.players[playerIndex]?.name||'Leader';return name==='You'?`You lead ${what}`:`${name} leads ${what}`;}
+function playerSubject(playerIndex){
+  const p=game.players[playerIndex];
+  if(!p)return 'Player';
+  return p.human||p.name==='You'?'You':p.name;
+}
+function playerVerb(playerIndex,youVerb,otherVerb){
+  const p=game.players[playerIndex];
+  return (p&&p.human)||playerSubject(playerIndex)==='You'?youVerb:otherVerb;
+}
+function playerLeadPhrase(playerIndex,what='next'){const name=playerSubject(playerIndex);return name==='You'?`You lead ${what}`:`${name} leads ${what}`;}
 function totalTricksAvailable(){return game.handSize;}
 function applyAppearance(){document.body.classList.toggle('back-red',settings.cardBack==='red');document.body.classList.toggle('back-green',settings.cardBack==='green');document.body.classList.toggle('back-black',settings.cardBack==='black');document.documentElement.style.setProperty('--felt',settings.felt==='blue'?'#173f72':settings.felt==='purple'?'#3a265f':settings.felt==='black'?'#1b2226':'#124a3b');}
 
@@ -5049,7 +5058,7 @@ function setBid(playerIndex,bid,fromFlow=false){
   if(!game||!game.players[playerIndex])return;
   const p=game.players[playerIndex];
   if(p.bid!==null&&p.bid!==bid)return;
-  p.bid=bid;bidFlashIndex=playerIndex;log(`${p.name} bids ${bid}`,`${p.name} predicts ${bid} trick${bid===1?'':'s'}.`);
+  p.bid=bid;bidFlashIndex=playerIndex;log(`${playerSubject(playerIndex)} ${playerVerb(playerIndex,'bid','bids')} ${bid}`,`${playerSubject(playerIndex)} ${playerVerb(playerIndex,'predict','predicts')} ${bid} trick${bid===1?'':'s'}.`);
   if(biddingComplete()){
     closeModal(els.bidModal);
     game.phase='trumpLocking';
@@ -5297,9 +5306,10 @@ function forceResolveStuckTrick(){
 
   const led=trick[0].card.suit;
   const trumpPlayed=trick.some(t=>t.card.suit===game.trumpSuit);
-  const reason=trumpPlayed?`${winnerPlayer.name} won because ${cardLabel(winner.card)} was the highest trump.`:`${winnerPlayer.name} won because ${cardLabel(winner.card)} was the highest ${SUIT_NAMES[led]} card.`;
+  const winnerName=playerSubject(winner.playerIndex);
+  const reason=trumpPlayed?`${winnerName} won because ${cardLabel(winner.card)} was the highest trump.`:`${winnerName} won because ${cardLabel(winner.card)} was the highest ${SUIT_NAMES[led]} card.`;
   explain(reason);
-  log(`${winnerPlayer.name} wins the stuck trick`,reason);
+  log(`${winnerName} ${playerVerb(winner.playerIndex,'win','wins')} the stuck trick`,reason);
 
   game.currentTrick=[];
   game.leaderIndex=winner.playerIndex;
@@ -5374,7 +5384,7 @@ async function playCard(playerIndex,cardId){
         triggerTrumpStatusFlash('broken');
       }
     }
-    log(`${p.name} plays ${cardLabel(card)}`,buildPlayExplanation(playerIndex,card));
+    log(`${playerSubject(playerIndex)} ${playerVerb(playerIndex,'play','plays')} ${cardLabel(card)}`,buildPlayExplanation(playerIndex,card));
     explain(buildPlayExplanation(playerIndex,card));
     game.turnIndex=clockwiseNext(playerIndex);
     render();
@@ -5392,12 +5402,12 @@ async function playCard(playerIndex,cardId){
   }
 }
 function buildPlayExplanation(playerIndex,card){
-  const p=game.players[playerIndex];
-  if(game.currentTrick.length===1)return `${p.name} led ${cardLabel(card)}. Everyone who can follow ${SUIT_NAMES[card.suit]} must do so.`;
+  const name=playerSubject(playerIndex);
+  if(game.currentTrick.length===1)return `${name} led ${cardLabel(card)}. Everyone who can follow ${SUIT_NAMES[card.suit]} must do so.`;
   const led=game.currentTrick[0].card.suit;
-  if(card.suit===game.trumpSuit&&led!==game.trumpSuit)return `${p.name} could not follow ${SUIT_NAMES[led]} and played trump. Highest trump wins this trick.`;
-  if(card.suit===led)return `${p.name} followed ${SUIT_NAMES[led]} with ${cardLabel(card)}.`;
-  return `${p.name} could not follow ${SUIT_NAMES[led]} and played off-suit ${cardLabel(card)}.`;
+  if(card.suit===game.trumpSuit&&led!==game.trumpSuit)return `${name} could not follow ${SUIT_NAMES[led]} and played trump. Highest trump wins this trick.`;
+  if(card.suit===led)return `${name} followed ${SUIT_NAMES[led]} with ${cardLabel(card)}.`;
+  return `${name} could not follow ${SUIT_NAMES[led]} and played off-suit ${cardLabel(card)}.`;
 }
 
 function animationScale(){
@@ -5593,9 +5603,10 @@ async function resolveTrick(){
   if(winner.card.suit===game.trumpSuit){winnerStats.trumpWon+=1;winnerPlayer.handTrumpWon=(winnerPlayer.handTrumpWon||0)+1;}else{winnerStats.nonTrumpWon+=1;winnerPlayer.handNonTrumpWon=(winnerPlayer.handNonTrumpWon||0)+1;}
   const led=game.currentTrick[0].card.suit;
   const trumpPlayed=game.currentTrick.some(t=>t.card.suit===game.trumpSuit);
-  const reason=trumpPlayed?`${winnerPlayer.name} won because ${cardLabel(winner.card)} was the highest trump.`:`${winnerPlayer.name} won because ${cardLabel(winner.card)} was the highest ${SUIT_NAMES[led]} card.`;
+  const winnerName=playerSubject(winner.playerIndex);
+  const reason=trumpPlayed?`${winnerName} won because ${cardLabel(winner.card)} was the highest trump.`:`${winnerName} won because ${cardLabel(winner.card)} was the highest ${SUIT_NAMES[led]} card.`;
   explain(reason);
-  log(`${winnerPlayer.name} wins the trick`,reason);
+  log(`${winnerName} ${playerVerb(winner.playerIndex,'win','wins')} the trick`,reason);
   const newTricks=oldTricks+1;
   const reachedBid=winnerPlayer.bid!==null&&winnerPlayer.bid>0&&oldTricks<winnerPlayer.bid&&newTricks===winnerPlayer.bid;
   const wentOverBid=winnerPlayer.bid!==null&&oldTricks<=winnerPlayer.bid&&newTricks>winnerPlayer.bid;
@@ -5791,6 +5802,8 @@ function aiBid(p){
   let guaranteed=0;
   let highNonTrumpCount=0;
   const trump=hand.filter(c=>c.suit===game.trumpSuit);
+  const trumpRanks=trump.map(cardValue).sort((a,b)=>b-a);
+  const topTrumpGuarantees=trumpRanks.filter((v,idx)=>v===14-idx).length;
 
   if(handSize===1){
     const only=hand[0];
@@ -5850,6 +5863,7 @@ function aiBid(p){
       nonTrumpExpected+=val;
     }
   }
+  guaranteed=Math.max(guaranteed,topTrumpGuarantees);
 
   const suitCounts=SUITS.map(s=>hand.filter(c=>c.suit===s).length);
   const voids=suitCounts.filter(n=>n===0).length;
@@ -5955,6 +5969,10 @@ function aiBid(p){
       trumpOnlyFloor=Math.max(1,Math.min(handSize,Math.round(trumpExpected+.2)));
     }
     bid=Math.max(bid,Math.min(handSize,trumpOnlyFloor));
+  }
+
+  if(topTrumpGuarantees>0){
+    bid=Math.max(bid,Math.min(handSize,topTrumpGuarantees));
   }
 
   return Math.max(0,Math.min(handSize,bid));
