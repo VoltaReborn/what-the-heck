@@ -4429,6 +4429,305 @@ body.splashExiting .drawer.open .drawerBody{
   pointer-events:auto!important;
 }
 
+
+/* v150 Golf-style app update system adapted to What the Heck */
+.drawerVersionBadge{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  width:max-content!important;
+  align-self:center!important;
+}
+.drawerVersionBadge strong{
+  gap:6px!important;
+}
+.versionUpdateDot{
+  width:7px!important;
+  height:7px!important;
+  border-radius:999px!important;
+  display:inline-block!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.drawerVersionBadge.updateAvailable strong{
+  border-color:rgba(255,91,91,.96)!important;
+  color:#fff!important;
+  background:rgba(76,9,16,.50)!important;
+  animation:updatePillPulse 1.05s ease-in-out infinite!important;
+}
+.drawerVersionBadge.updateAvailable .versionUpdateDot{
+  background:#ff5858!important;
+  box-shadow:0 0 10px rgba(255,88,88,.88)!important;
+}
+@keyframes updatePillPulse{
+  0%,100%{box-shadow:0 0 0 1px rgba(255,88,88,.12),0 0 0 rgba(255,88,88,0),inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.18)}
+  50%{box-shadow:0 0 0 2px rgba(255,88,88,.46),0 0 18px rgba(255,88,88,.38),inset 0 1px 0 rgba(255,255,255,.08),0 5px 12px rgba(0,0,0,.18)}
+}
+.drawerUpdatePanel{
+  margin:8px 8px 0!important;
+  padding:9px!important;
+  border-radius:14px!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.18)!important;
+}
+.drawerUpdateTitle{
+  color:var(--gold)!important;
+  font-size:.72rem!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  margin-bottom:7px!important;
+}
+.drawerUpdateRows{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:7px!important;
+  margin-bottom:8px!important;
+}
+.drawerUpdateRows div{
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:11px!important;
+  background:rgba(0,0,0,.18)!important;
+  padding:7px!important;
+}
+.drawerUpdateRows span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:.58rem!important;
+  font-weight:1000!important;
+  letter-spacing:.06em!important;
+  text-transform:uppercase!important;
+}
+.drawerUpdateRows b{
+  display:block!important;
+  margin-top:3px!important;
+  color:#f5fbff!important;
+  font-size:.78rem!important;
+  font-weight:1000!important;
+}
+.drawerUpdateStatus{
+  min-height:18px!important;
+  color:#dce8ed!important;
+  font-size:.71rem!important;
+  font-weight:850!important;
+  line-height:1.22!important;
+  margin:0 1px 8px!important;
+}
+.drawerUpdateStatus.updateFresh{color:#9ff7cf!important;font-weight:1000!important}
+.drawerUpdateStatus.updateStale{color:#fff0a8!important;font-weight:1000!important}
+.drawerUpdateActions{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:7px!important;
+}
+.drawerUpdateActions .primaryBtn,
+.drawerUpdateActions .ghostBtn{
+  width:100%!important;
+  min-height:38px!important;
+  border-radius:11px!important;
+  font-size:.76rem!important;
+}
+.updateBanner{
+  position:fixed!important;
+  z-index:9700!important;
+  left:50%!important;
+  bottom:calc(18px + var(--safeBottom))!important;
+  transform:translateX(-50%)!important;
+  width:min(94vw,390px)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  padding:10px 11px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(255,91,91,.42)!important;
+  background:linear-gradient(180deg,rgba(31,18,22,.98),rgba(9,12,16,.98))!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.48),0 0 24px rgba(255,91,91,.14)!important;
+  color:#eefbff!important;
+}
+.updateBanner.hidden{display:none!important}
+.updateBannerText{
+  min-width:0!important;
+  color:#fff7d2!important;
+  font-size:.76rem!important;
+  font-weight:1000!important;
+  line-height:1.18!important;
+}
+.updateBannerActions{
+  display:flex!important;
+  gap:6px!important;
+  flex:0 0 auto!important;
+}
+.updateBannerActions button{
+  min-height:31px!important;
+  border-radius:999px!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  padding:5px 8px!important;
+  font-size:.66rem!important;
+  font-weight:1000!important;
+  color:#fff!important;
+  background:rgba(255,255,255,.08)!important;
+}
+.updateBannerActions .updateBannerApply{
+  background:linear-gradient(180deg,rgba(240,202,104,1),rgba(217,174,72,1))!important;
+  border-color:rgba(255,255,255,.42)!important;
+  color:#171100!important;
+}
+
+
+/* v151 match Golf's inline update layout and keep the version pill anchored */
+.drawerHome{
+  min-height:100%!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.drawerMenuList{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  display:block!important;
+}
+.drawerMenuList .menuBtn{
+  width:100%!important;
+}
+.drawerInlineUpdate{
+  flex:0 0 auto!important;
+  overflow:hidden!important;
+  max-height:260px!important;
+  opacity:1!important;
+  transform:translateY(0)!important;
+  transition:max-height 180ms ease,opacity 140ms ease,transform 140ms ease,margin 140ms ease!important;
+  margin:0 0 8px!important;
+}
+.drawerInlineUpdate.collapsed{
+  max-height:0!important;
+  opacity:0!important;
+  transform:translateY(4px)!important;
+  margin:0!important;
+  pointer-events:none!important;
+}
+.drawerFooterTools{
+  margin-top:0!important;
+  padding-top:8px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  flex:0 0 auto!important;
+  border-top:0!important;
+}
+.drawerFooterTools .drawerVersionBadge,
+.drawerVersionBadge{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  display:inline-flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  width:auto!important;
+  align-self:center!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  color:var(--gold)!important;
+}
+.drawerFooterTools .drawerVersionBadge strong,
+.drawerVersionBadge strong{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  min-width:54px!important;
+  padding:4px 10px!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.34)!important;
+  border:1px solid rgba(240,202,104,.28)!important;
+  color:var(--gold)!important;
+  font-size:.68rem!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  line-height:1!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 5px 12px rgba(0,0,0,.18)!important;
+}
+.drawerFooterTools .drawerVersionBadge.updateAvailable strong,
+.drawerVersionBadge.updateAvailable strong{
+  border-color:rgba(255,91,91,.96)!important;
+  color:#fff!important;
+  background:rgba(76,9,16,.50)!important;
+  animation:updatePillPulse 1.05s ease-in-out infinite!important;
+}
+.drawerInlineUpdate .sectionBox,
+.updateMainBox{
+  border:1px solid rgba(255,255,255,.14)!important;
+  border-radius:12px!important;
+  padding:9px!important;
+  background:rgba(255,255,255,.055)!important;
+  margin:0!important;
+}
+.drawerInlineUpdate h3,
+.updateMainBox h3{
+  margin:0 0 7px!important;
+  color:var(--gold)!important;
+  font-size:.8rem!important;
+  font-weight:1000!important;
+  text-transform:uppercase!important;
+  letter-spacing:.07em!important;
+}
+.drawerInlineUpdate p,
+.updateMainBox p{
+  margin:0!important;
+  color:#d9e5ea!important;
+  font-size:.78rem!important;
+  line-height:1.28!important;
+  font-weight:850!important;
+}
+.updateVersionRows{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:7px!important;
+  margin:8px 0 0!important;
+}
+.updateVersionRows div{
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:10px!important;
+  background:rgba(0,0,0,.16)!important;
+  padding:6px 7px!important;
+}
+.updateVersionRows span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:.56rem!important;
+  font-weight:1000!important;
+  letter-spacing:.06em!important;
+  text-transform:uppercase!important;
+}
+.updateVersionRows b{
+  display:block!important;
+  margin-top:2px!important;
+  color:#f5fbff!important;
+  font-size:.74rem!important;
+  font-weight:1000!important;
+}
+.updateBtnGrid{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:8px!important;
+  margin-top:10px!important;
+}
+.updateBtnGrid .primaryBtn,
+.updateBtnGrid .ghostBtn{
+  width:100%!important;
+  min-height:42px!important;
+  border-radius:10px!important;
+}
+.updateBtnGrid .hidden{display:none!important}
+.updateFresh{color:#9ff7cf!important;font-weight:1000!important}
+.updateStale{color:#fff0a8!important;font-weight:1000!important}
+
 </style>
 </head>
 <body>
@@ -4455,13 +4754,31 @@ body.splashExiting .drawer.open .drawerBody{
     <div class="drawerHead"><div class="drawerTitle" id="drawerTitle">Game Menu</div><button class="closeDrawer" id="closeDrawer">×</button></div>
     <div class="drawerContent">
       <div class="drawerHome" id="drawerHome">
-        <button class="menuBtn" data-page="rules">Rules <small>How to play</small></button>
-        <button class="menuBtn" data-page="trainer">Hint / Trainer <small>Advice + explanation</small></button>
-        <button class="menuBtn" data-page="log">Log / History <small>Turns and hands</small></button>
-        <button class="menuBtn" data-page="settings">Settings <small>Safe mid-game changes</small></button>
-        <button class="menuBtn" data-page="appearance">Appearance <small>Felt and turn border</small></button>
-        <button class="menuBtn" id="drawerNewGame">New Game <small>Return to setup</small></button>
-        <div class="drawerVersionBadge" id="drawerVersionBadge" aria-label="App version"></div>
+        <nav class="drawerMenuList" aria-label="Game menu">
+          <button class="menuBtn" data-page="rules">Rules <small>How to play</small></button>
+          <button class="menuBtn" data-page="trainer">Hint / Trainer <small>Advice + explanation</small></button>
+          <button class="menuBtn" data-page="log">Log / History <small>Turns and hands</small></button>
+          <button class="menuBtn" data-page="settings">Settings <small>Safe mid-game changes</small></button>
+          <button class="menuBtn" data-page="appearance">Appearance <small>Felt and turn border</small></button>
+          <button class="menuBtn" id="drawerNewGame">New Game <small>Return to setup</small></button>
+        </nav>
+        <div class="drawerInlineUpdate collapsed" id="drawerUpdatePanel" aria-label="App update" aria-live="polite">
+          <div class="sectionBox updateMainBox">
+            <h3>App update</h3>
+            <p id="updateStatusText">What the Heck v151 is running.</p>
+            <div class="updateVersionRows">
+              <div><span>Current</span><b id="updateCurrentVersion">v151</b></div>
+              <div><span>Latest</span><b id="updateLatestVersion">Unknown</b></div>
+            </div>
+            <div class="updateBtnGrid">
+              <button class="primaryBtn" id="checkUpdateBtn" type="button">Check for update</button>
+              <button class="primaryBtn hidden" id="applyUpdateBtn" type="button">Apply update</button>
+            </div>
+          </div>
+        </div>
+        <div class="drawerFooterTools">
+          <button class="drawerVersionBadge" id="drawerVersionBadge" type="button" aria-label="App update and version" aria-expanded="false"><strong id="versionLabel">v151</strong><span class="versionUpdateDot" aria-hidden="true"></span></button>
+        </div>
       </div>
       <section class="subpage" id="page-rules"></section>
       <section class="subpage" id="page-trainer"></section>
@@ -4561,13 +4878,20 @@ body.splashExiting .drawer.open .drawerBody{
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="updateBanner hidden" id="updateBanner" role="status" aria-live="polite">
+  <div class="updateBannerText" id="updateBannerText">Update available.</div>
+  <div class="updateBannerActions">
+    <button class="updateBannerApply" id="updateBannerApply" type="button">Apply update</button>
+    <button class="updateBannerLater" id="updateBannerLater" type="button">Later</button>
+  </div>
+</div>
 
 <script>
 (function(){
 'use strict';
 const SAVE_KEY='what_the_heck_standalone_v1_save';
 const SETTINGS_KEY='what_the_heck_standalone_v1_settings';
-const APP_VERSION='v149';
+const APP_VERSION='v151';
 const SUITS=['♠','♦','♣','♥'];
 const SUIT_NAMES={'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -4598,6 +4922,13 @@ let cardMotionActive=false;
 let cardMotionCardId=null;
 let turnRacerEl=null;
 let splashVersionTimer=null;
+let updateCheckTimer=null;
+let latestPublishedVersion='';
+let updateIsAvailable=false;
+let dismissedUpdateVersion=null;
+let updatePanelOpen=false;
+let applyingUpdateNow=false;
+let lastAutoUpdateCheck=0;
 
 const els={
   app:document.getElementById('app'),centerArea:document.querySelector('.centerArea'),
@@ -4608,6 +4939,8 @@ const els={
   recapModal:document.getElementById('recapModal'),recapTitle:document.getElementById('recapTitle'),recapBody:document.getElementById('recapBody'),nextHandBtn:document.getElementById('nextHandBtn'),
   scoreModal:document.getElementById('scoreModal'),scoreModalBody:document.getElementById('scoreModalBody'),trumpModal:document.getElementById('trumpModal'),trumpModalBody:document.getElementById('trumpModalBody'),
   drawer:document.getElementById('drawer'),drawerTab:document.getElementById('drawerTab'),closeDrawer:document.getElementById('closeDrawer'),drawerTitle:document.getElementById('drawerTitle'),drawerHome:document.getElementById('drawerHome'),drawerNewGame:document.getElementById('drawerNewGame'),drawerVersionBadge:document.getElementById('drawerVersionBadge'),
+  updatePanel:document.getElementById('drawerUpdatePanel'),updateCurrentVersion:document.getElementById('updateCurrentVersion'),updateLatestVersion:document.getElementById('updateLatestVersion'),updateStatusText:document.getElementById('updateStatusText'),checkUpdateBtn:document.getElementById('checkUpdateBtn'),applyUpdateBtn:document.getElementById('applyUpdateBtn'),
+  updateBanner:document.getElementById('updateBanner'),updateBannerText:document.getElementById('updateBannerText'),updateBannerApply:document.getElementById('updateBannerApply'),updateBannerLater:document.getElementById('updateBannerLater'),
   pages:{rules:document.getElementById('page-rules'),trainer:document.getElementById('page-trainer'),log:document.getElementById('page-log'),settings:document.getElementById('page-settings'),appearance:document.getElementById('page-appearance')},toast:document.getElementById('toast')
 };
 
@@ -6396,11 +6729,146 @@ function renderHand(){
   [...els.handGrid.querySelectorAll('.card')].forEach(el=>{el.addEventListener('click',()=>onHumanCardTap(el.dataset.cardId));});
   requestAnimationFrame(fitHandCards);
 }
-function renderDrawerPages(){
-  renderRules();renderTrainer();renderLog();renderSettings();renderAppearance();
+
+function normalizeVersion(value){
+  const raw=String(value||'').trim();
+  const match=raw.match(/v?\s*(\d+)/i);
+  return match?`v${Number(match[1])}`:raw;
+}
+function displayVersion(value){return normalizeVersion(value)||APP_VERSION;}
+function versionNumber(value){
+  const match=String(value||'').match(/v?\s*(\d+)/i);
+  return match?Number(match[1]):0;
+}
+function currentVersionText(){return normalizeVersion(APP_VERSION);}
+function isRemoteNewer(remote,current=currentVersionText()){return versionNumber(remote)>versionNumber(current);}
+function renderUpdateUi(){
+  const current=currentVersionText();
+  const latest=latestPublishedVersion?displayVersion(latestPublishedVersion):'Unknown';
   if(els.drawerVersionBadge){
-    els.drawerVersionBadge.innerHTML=`<strong>${APP_VERSION}</strong>`;
+    els.drawerVersionBadge.innerHTML=`<strong>${escapeHtml(current)}<span class="versionUpdateDot" aria-hidden="true"></span></strong>`;
+    els.drawerVersionBadge.classList.toggle('updateAvailable',updateIsAvailable);
+    els.drawerVersionBadge.setAttribute('aria-expanded',updatePanelOpen?'true':'false');
+    els.drawerVersionBadge.setAttribute('aria-label',updateIsAvailable?`Update available: ${displayVersion(latestPublishedVersion)}`:`App version ${current}`);
+    els.drawerVersionBadge.title=updateIsAvailable?`Update available: ${displayVersion(latestPublishedVersion)}`:`${current}`;
   }
+  if(els.updatePanel)els.updatePanel.classList.toggle('collapsed',!updatePanelOpen);
+  if(els.updateCurrentVersion)els.updateCurrentVersion.textContent=current;
+  if(els.updateLatestVersion)els.updateLatestVersion.textContent=latest;
+  if(els.applyUpdateBtn)els.applyUpdateBtn.classList.toggle('hidden',!updateIsAvailable);
+}
+function setUpdateStatus(message,kind=''){
+  if(!els.updateStatusText)return;
+  els.updateStatusText.textContent=message;
+  els.updateStatusText.classList.toggle('updateFresh',kind==='fresh');
+  els.updateStatusText.classList.toggle('updateStale',kind==='stale');
+}
+function setUpdateAvailable(remote=''){
+  latestPublishedVersion=remote?normalizeVersion(remote):latestPublishedVersion;
+  updateIsAvailable=!!remote&&isRemoteNewer(remote);
+  renderUpdateUi();
+}
+async function fetchRemoteVersion(){
+  const response=await fetch(`./version.json?ts=${Date.now()}`,{cache:'no-store'});
+  if(!response.ok)throw new Error('Version check failed');
+  const data=await response.json();
+  return normalizeVersion(data.version||data.label||data.appVersion||data.build);
+}
+function showUpdateBanner(remote){
+  const normalized=normalizeVersion(remote);
+  if(!normalized||!isRemoteNewer(normalized))return;
+  if(dismissedUpdateVersion===normalized)return;
+  if(!els.updateBanner)return;
+  els.updateBannerText.textContent=`Update available: ${displayVersion(normalized)}`;
+  els.updateBanner.classList.remove('hidden');
+}
+function dismissUpdateBanner(){
+  dismissedUpdateVersion=latestPublishedVersion||dismissedUpdateVersion;
+  els.updateBanner?.classList.add('hidden');
+}
+async function checkForUpdate({quiet=false,auto=false}={}){
+  if(!auto)setUpdateStatus('Checking for updates…');
+  lastAutoUpdateCheck=Date.now();
+  try{
+    const remote=await fetchRemoteVersion();
+    latestPublishedVersion=remote;
+    if(remote&&isRemoteNewer(remote)){
+      setUpdateAvailable(remote);
+      setUpdateStatus(`Update available: ${displayVersion(remote)}.`,'stale');
+      showUpdateBanner(remote);
+      if(!quiet&&!auto)showToast(`Update available: ${displayVersion(remote)}`);
+      return true;
+    }
+    updateIsAvailable=false;
+    renderUpdateUi();
+    setUpdateStatus(`What the Heck ${currentVersionText()} is current.`,'fresh');
+    els.updateBanner?.classList.add('hidden');
+    if(!quiet&&!auto)showToast('App is up to date.');
+    return false;
+  }catch(err){
+    if(!auto)setUpdateStatus('Could not check for updates.');
+    if(!quiet&&!auto)showToast('Update check failed.');
+    return false;
+  }
+}
+async function clearAppCaches(){
+  if(!('caches' in window))return;
+  const keys=await caches.keys();
+  await Promise.all(keys.filter(key=>key.startsWith('what-the-heck-pwa-')).map(key=>caches.delete(key)));
+}
+async function applyUpdate(){
+  applyingUpdateNow=true;
+  setUpdateStatus('Applying update…');
+  try{
+    const reg=await navigator.serviceWorker?.getRegistration?.();
+    await reg?.update?.();
+    const freshReg=await navigator.serviceWorker?.getRegistration?.();
+    if(freshReg?.waiting)freshReg.waiting.postMessage({type:'SKIP_WAITING'});
+    await clearAppCaches();
+  }catch(err){}
+  const path=window.location.pathname||'./';
+  window.location.replace(`${path}?refresh=${Date.now()}`);
+}
+function startAutomaticUpdateChecks(){
+  setTimeout(()=>checkForUpdate({quiet:true,auto:true}),3500);
+  if(updateCheckTimer)clearInterval(updateCheckTimer);
+  updateCheckTimer=setInterval(()=>checkForUpdate({quiet:true,auto:true}),12*60*1000);
+  const checkOnResume=()=>{
+    if(document.visibilityState&&document.visibilityState!=='visible')return;
+    if(Date.now()-lastAutoUpdateCheck>60*1000)checkForUpdate({quiet:true,auto:true});
+  };
+  document.addEventListener('visibilitychange',checkOnResume);
+  window.addEventListener('focus',checkOnResume);
+}
+function wireServiceWorkerUpdates(){
+  if(!('serviceWorker' in navigator))return;
+  let reloading=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(!applyingUpdateNow||reloading)return;
+    reloading=true;
+    window.location.reload();
+  });
+  navigator.serviceWorker.getRegistration?.().then(reg=>{
+    if(!reg)return;
+    if(reg.waiting){
+      setUpdateStatus('A downloaded update is ready. Tap Apply update.','stale');
+      checkForUpdate({quiet:true,auto:true});
+    }
+    reg.addEventListener('updatefound',()=>{
+      const worker=reg.installing;
+      if(!worker)return;
+      worker.addEventListener('statechange',()=>{
+        if(worker.state==='installed'&&navigator.serviceWorker.controller){
+          setUpdateStatus('A new version is ready. Tap Apply update.','stale');
+          checkForUpdate({quiet:true,auto:true});
+        }
+      });
+    });
+  }).catch(()=>{});
+}
+
+function renderDrawerPages(){
+  renderRules();renderTrainer();renderLog();renderSettings();renderAppearance();renderUpdateUi();
 }
 function pageShell(title,content){return `<div class="subTop"><button class="backBtn" data-back="1">‹</button><div class="drawerTitle">${title}</div></div>${content}`;}
 
@@ -6540,11 +7008,16 @@ function bindEvents(){
   els.closeConfirm.onclick=()=>{pendingConfirm=null;closeModal(els.confirmModal);};els.cancelConfirm.onclick=els.closeConfirm.onclick;els.confirmPlayBtn.onclick=()=>{if(pendingConfirm)playHumanCard(pendingConfirm);};
   els.scoreModal.onclick=()=>closeModal(els.scoreModal);if(els.trumpModal)els.trumpModal.onclick=()=>closeModal(els.trumpModal);
   els.drawerTab.onclick=()=>{if(els.drawer.classList.contains('open'))closeDrawer();else openDrawer();};els.closeDrawer.onclick=closeDrawer;els.drawerNewGame.onclick=()=>{closeDrawer();openSetup();};
+  if(els.drawerVersionBadge)els.drawerVersionBadge.onclick=()=>{updatePanelOpen=!updatePanelOpen;renderUpdateUi();};
+  if(els.checkUpdateBtn)els.checkUpdateBtn.onclick=()=>checkForUpdate({quiet:false,auto:false});
+  if(els.applyUpdateBtn)els.applyUpdateBtn.onclick=applyUpdate;
+  if(els.updateBannerApply)els.updateBannerApply.onclick=applyUpdate;
+  if(els.updateBannerLater)els.updateBannerLater.onclick=dismissUpdateBanner;
   document.addEventListener('click',e=>{const scoreBtn=e.target.closest('[data-show-scores]');if(scoreBtn){showScores();return;}const menu=e.target.closest('[data-page]');if(menu){openPage(menu.dataset.page);return;}if(e.target.closest('[data-back]')){openHome();return;}const tog=e.target.closest('[data-setting-toggle]');if(tog){settings[tog.dataset.settingToggle]=!settings[tog.dataset.settingToggle];saveSettings();render();return;}const felt=e.target.closest('[data-felt]');if(felt){settings.felt=felt.dataset.felt;saveSettings();render();return;}const back=e.target.closest('[data-back]');if(back&&!e.target.closest('[data-back="1"]')){settings.cardBack=back.dataset.back;saveSettings();render();}});
   document.addEventListener('change',e=>{const sel=e.target.closest('[data-setting-select]');if(sel){settings[sel.dataset.settingSelect]=sel.value;saveSettings();render();return;}const color=e.target.closest('[data-setting-color]');if(color){settings[color.dataset.settingColor]=color.value;settings.turnBorderPreset='custom';saveSettings();render();return;}});
 }
 
-function init(){bindEvents();applyAppearance();showSplash();render();}
+function init(){bindEvents();applyAppearance();showSplash();render();startAutomaticUpdateChecks();wireServiceWorkerUpdates();}
 init();
 })();
 </script>
@@ -6587,7 +7060,9 @@ init();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      reg.update?.();
+    }).catch(() => {});
   });
 }
 </script>
